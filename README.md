@@ -160,7 +160,7 @@ supply-chain-verification-agent/
 ## 👤 Author
 
 **Pravin S** (Donaldo-Crish)
-Mechanical & Production Engineering | AI Systems Builder
+Pravin S | Mechatronics engineering & Automation | AI Agent Architect
 
 ---
 
