@@ -101,6 +101,18 @@ def _styles():
     }
     return custom
 
+def add_page_number(canvas, doc):
+    page_num = canvas.getPageNumber()
+
+    canvas.setFont("Helvetica", 8)
+    canvas.setFillColor(MID_GREY)
+
+    canvas.drawRightString(
+        A4[0] - 20 * mm,
+        10 * mm,
+        f"Page {page_num}"
+    )
+
 def generate_audit_pdf(product_data: dict, journey: list, ai_report: str) -> bytes:
     buffer = BytesIO()
     margin = 20 * mm
@@ -114,6 +126,8 @@ def generate_audit_pdf(product_data: dict, journey: list, ai_report: str) -> byt
         bottomMargin=margin,
         title=f"Audit Report — {safe_text(product_data.get('product_id', 'N/A'))}",
         author="Supply Chain Verification Agent",
+        subject="Supply Chain Audit Report",
+        keywords="Supply Chain, Audit, Forensics, SHA-256, Verification"
     )
 
     styles = _styles()
@@ -173,6 +187,7 @@ def generate_audit_pdf(product_data: dict, journey: list, ai_report: str) -> byt
         ("Manufacture Date", product_data.get("manufacture_date", "N/A")),
         ("Current Location", product_data.get("current_location", "N/A")),
         ("Ledger Status", status),
+        
     ]
 
     detail_rows = [[
@@ -192,6 +207,46 @@ def generate_audit_pdf(product_data: dict, journey: list, ai_report: str) -> byt
     ]))
     story.append(detail_table)
     story.append(Spacer(1, 6 * mm))
+
+    record_hash = product_data.get("record_hash")
+
+    if record_hash:
+        story.append(
+            Paragraph(
+                "CRYPTOGRAPHIC FINGERPRINT",
+                styles["section_head"]
+            )
+        )
+
+        story.append(
+            HRFlowable(
+                width="100%",
+                thickness=0.5,
+                color=ACCENT_BLUE
+            )
+        )
+
+        story.append(Spacer(1, 2 * mm))
+
+        hash_box = Table(
+            [[Paragraph(
+                safe_text(record_hash),
+                styles["body"]
+            )]],
+            colWidths=[170 * mm]
+        )
+
+        hash_box.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, -1), LIGHT_GREY),
+            ("BOX", (0, 0), (-1, -1), 0.5, MID_GREY),
+            ("LEFTPADDING", (0, 0), (-1, -1), 8),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+            ("TOPPADDING", (0, 0), (-1, -1), 6),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ]))
+
+        story.append(hash_box)
+        story.append(Spacer(1, 5 * mm))
 
     story.append(Paragraph("CHAIN OF CUSTODY", styles["section_head"]))
     story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT_BLUE))
@@ -266,5 +321,9 @@ def generate_audit_pdf(product_data: dict, journey: list, ai_report: str) -> byt
         styles["footer"]
     ))
 
-    doc.build(story)
+    doc.build(
+    story,
+    onFirstPage=add_page_number,
+    onLaterPages=add_page_number
+)
     return buffer.getvalue()

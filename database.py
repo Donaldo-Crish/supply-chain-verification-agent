@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 from thefuzz import process
 import pandas as pd
 import json
@@ -54,21 +55,35 @@ def get_connection():
 def init_db():
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS products (
-            product_id TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id TEXT,
             name TEXT,
             manufacturer TEXT,
             batch_id TEXT,
             manufacture_date TEXT,
             current_location TEXT,
             status TEXT,
+            record_hash TEXT UNIQUE,
             extra_data TEXT,
             added_timestamp TEXT
         )
     """)
-    cursor.execute("CREATE INDEX IF NOT EXISTS idx_status ON products(status)")
-    cursor.execute("CREATE INDEX IF NOT EXISTS idx_manufacturer ON products(manufacturer)")
+
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_product_id ON products(product_id)"
+    )
+
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_status ON products(status)"
+    )
+
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_manufacturer ON products(manufacturer)"
+    )
+
     conn.commit()
     conn.close()
 
@@ -102,6 +117,18 @@ def normalize_status(value):
     cleaned = str(value).lower().strip().replace(" ", "").replace("_", "")
     return STATUS_MAP.get(cleaned, str(value).upper())
 
+
+def generate_record_hash(product_data):
+    raw = (
+        str(product_data.get("product_id", "")) +
+        str(product_data.get("manufacturer", "")) +
+        str(product_data.get("batch_id", "")) +
+        str(product_data.get("current_location", "")) +
+        str(product_data.get("status", ""))
+    )
+
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
 def add_product(p):
     conn = get_connection()
     cursor = conn.cursor()
@@ -113,12 +140,28 @@ def add_product(p):
         conn.close()
         return False, "Product ID and Name are required."
 
+    record_hash = generate_record_hash({
+        "product_id": product_id,
+        "manufacturer": str(p.get("manufacturer", "UNKNOWN")).strip(),
+        "batch_id": str(p.get("batch_id", "UNKNOWN")).strip(),
+        "current_location": str(p.get("current_location", "UNKNOWN")).strip(),
+        "status": normalize_status(p.get("status", "UNKNOWN"))
+    })
+
     try:
         cursor.execute("""
             INSERT INTO products (
-                product_id, name, manufacturer, batch_id, manufacture_date,
-                current_location, status, extra_data, added_timestamp
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                product_id,
+                name,
+                manufacturer,
+                batch_id,
+                manufacture_date,
+                current_location,
+                status,
+                record_hash,
+                extra_data,
+                added_timestamp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             product_id,
             name,
@@ -127,6 +170,7 @@ def add_product(p):
             str(p.get("manufacture_date", "UNKNOWN")).strip() or "UNKNOWN",
             str(p.get("current_location", "UNKNOWN")).strip() or "UNKNOWN",
             normalize_status(p.get("status", "UNKNOWN")),
+            record_hash,
             "{}",
             datetime.now().isoformat()
         ))
@@ -191,6 +235,7 @@ def bulk_insert_products(df, manual_mapping=None):
 
         entry["extra_data"] = json.dumps(extra_data)
         entry["added_timestamp"] = datetime.now().isoformat()
+        entry["record_hash"] = generate_record_hash(entry)
 
         rows_to_insert.append((
             entry["product_id"],
@@ -200,8 +245,10 @@ def bulk_insert_products(df, manual_mapping=None):
             entry["manufacture_date"],
             entry["current_location"],
             entry["status"],
+            entry["record_hash"],
             entry["extra_data"],
             entry["added_timestamp"]
+            
         ))
 
         existing_ids.add(product_id)
@@ -210,8 +257,8 @@ def bulk_insert_products(df, manual_mapping=None):
     cursor.executemany("""
         INSERT INTO products (
             product_id, name, manufacturer, batch_id, manufacture_date,
-            current_location, status, extra_data, added_timestamp
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            current_location, status, record_hash, extra_data, added_timestamp
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, rows_to_insert)
 
     conn.commit()

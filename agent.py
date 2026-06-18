@@ -115,8 +115,59 @@ def trace_journey(product_id):
 
     return journey
 
+def get_historical_record_count(product_id):
+    try:
+        df = pd.read_csv("products.csv")
+
+        if "product_id" not in df.columns:
+            return 0
+
+        return int(
+            (df["product_id"].astype(str) == str(product_id)).sum()
+        )
+
+    except Exception:
+        return 0
+    
+def get_historical_summary(product_id):
+    try:
+        df = pd.read_csv("products.csv")
+
+        rows = df[df["product_id"].astype(str) == str(product_id)]
+
+        if rows.empty:
+            return None
+
+        manufacturers = sorted(
+            rows["manufacturer"].dropna().astype(str).unique().tolist()
+        )
+
+        locations = sorted(
+            rows["current_location"].dropna().astype(str).unique().tolist()
+        )
+
+        status_counts = (
+            rows["status"]
+            .astype(str)
+            .value_counts()
+            .to_dict()
+        )
+
+        return {
+            "total_events": len(rows),
+            "manufacturers": manufacturers,
+            "locations": locations,
+            "status_counts": status_counts
+        }
+
+    except Exception:
+        return None
+    
 def verify_product(product_id):
     data = load_product_data(product_id)
+
+    history_count = get_historical_record_count(product_id)
+
     if not data:
         return "Product not found in ledger."
 
@@ -124,9 +175,11 @@ def verify_product(product_id):
     unverified_stages = [s["stage"] for s in journey if not s["verified"]]
 
     prompt = f"""You are a senior supply chain forensic analyst. Your job is to investigate product records and explain WHY something is suspicious - not just state that it is.
-
 Product Record:
 {data}
+
+Historical Ledger Events:
+{history_count}
 
 Chain of Custody Breakdown:
 {journey}
@@ -204,13 +257,18 @@ def chat_about_product(product_id, conversation_history, user_message):
         return conversation_history, "That product ID isn't in the ledger. Try another one."
 
     journey = trace_journey(product_id)
+    history_count = get_historical_record_count(product_id)
     unverified_stages = [s["stage"] for s in journey if not s["verified"]]
 
     system_prompt = f"""You are a supply chain verification specialist with deep forensic knowledge.
+
 You're currently analyzing product {product_id}.
 
 Product record:
 {data}
+
+Historical Ledger Events:
+{history_count}
 
 Chain of custody:
 {journey}
@@ -219,9 +277,21 @@ Unverified stages:
 {unverified_stages if unverified_stages else "None - all stages verified"}
 
 Answer clearly and specifically.
+
+If asked about:
+- historical records
+- duplicate product IDs
+- number of appearances
+- previous ledger events
+
+use the Historical Ledger Events value above.
+
 If a field is available in the product record, use it.
-If you don't know something, say so - don't hallucinate.
-Be concise, under 120 words per reply."""
+
+If you don't know something, say so.
+
+Be concise, under 120 words per reply.
+"""
 
     messages = [{"role": "system", "content": system_prompt}]
     messages.extend(conversation_history)

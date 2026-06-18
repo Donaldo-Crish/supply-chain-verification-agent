@@ -10,7 +10,8 @@ from agent import (
     trace_journey,
     get_manufacturer_risk_summary,
     chat_about_product,
-    load_product_data
+    load_product_data,
+    get_historical_summary
 )
 from pdf_export import generate_audit_pdf
 
@@ -33,6 +34,9 @@ DEFAULTS = {
     "sidebar_file_bytes": None,
     "sidebar_file_name": None,
     "last_audited": None,
+    "selected_product": None,
+    "investigator_search": "",
+    "matching_products": [],
 }
 for key, default in DEFAULTS.items():
     if key not in st.session_state:
@@ -54,27 +58,54 @@ def handle_sidebar_upload():
 
 # ─── FONT / CSS INJECTION ─────────────────────────────────────────────────────
 FONTS = {
-    "Poppins": "https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap",
-    "Inter": "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
-    "JetBrains Mono": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap",
+    "Poppins": "Poppins",
+    "Inter": "Inter",
+    "JetBrains Mono": "JetBrains Mono",
 }
 
 selected_font = st.session_state.font_choice
 
+# CHANGE 5 — Import all Google Fonts upfront
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+</style>
+""", unsafe_allow_html=True)
+
+# CHANGE 4 — Apply selected font globally
+st.markdown(
+    f"""
+    <style>
+    html, body, [class*="css"], .stApp,
+    div, span, p, label,
+    button,
+    input,
+    textarea,
+    select,
+    h1, h2, h3, h4, h5, h6,
+    [data-testid="stMarkdownContainer"],
+    [data-testid="stMetricValue"],
+    [data-testid="stMetricLabel"],
+    [data-testid="stChatMessageContent"] {{
+        font-family: "{selected_font}", sans-serif !important;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.html(f"""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="{FONTS[selected_font]}" rel="stylesheet">
-<link href="{FONTS['JetBrains Mono']}" rel="stylesheet">
 <style>
 :root {{
     --app-font: '{selected_font}', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }}
-
 html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"] {{
     font-family: var(--app-font) !important;
 }}
-
 [data-testid="stAppViewContainer"],
 [data-testid="stSidebar"],
 [data-testid="stMarkdownContainer"],
@@ -85,15 +116,11 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"] {{
 [data-testid="stForm"],
 [data-testid="stDataFrame"],
 [data-testid="stAlert"],
-label,
-input,
-textarea,
-select {{
+label, input, textarea, select {{
     font-family: var(--app-font) !important;
     letter-spacing: normal !important;
     word-spacing: normal !important;
 }}
-
 [data-testid="stMarkdownContainer"] *,
 [data-testid="stCaptionContainer"] *,
 [data-testid="stMetric"] *,
@@ -103,8 +130,6 @@ select {{
     letter-spacing: normal !important;
     word-spacing: normal !important;
 }}
-
-/* Keep Streamlit's internal Material icon ligatures from rendering as words. */
 .material-icons,
 .material-icons-rounded,
 .material-symbols-outlined,
@@ -131,20 +156,14 @@ details summary [data-testid="stIconMaterial"] {{
     min-width: 1.15rem !important;
     overflow: hidden !important;
 }}
-
-button,
-button *,
-[role="button"],
-[role="button"] * {{
+button, button *, [role="button"], [role="button"] * {{
     font-family: '{selected_font}', sans-serif !important;
     white-space: normal !important;
 }}
-
 button [data-testid="stIconMaterial"],
 [role="button"] [data-testid="stIconMaterial"] {{
     font-family: 'Material Symbols Rounded', 'Material Icons', sans-serif !important;
 }}
-
 h1, h2, h3, h4, h5, h6,
 p, label, input, textarea, select,
 div[data-testid="stMarkdownContainer"],
@@ -153,12 +172,9 @@ div[data-testid="stCaptionContainer"] {{
     font-family: var(--app-font) !important;
     line-height: 1.4 !important;
 }}
-
 code, pre, kbd, samp {{
     font-family: 'JetBrains Mono', monospace !important;
 }}
-
-/* Keep sidebar expanders in app font, not monospace */
 [data-testid="stSidebar"] details summary,
 [data-testid="stSidebar"] summary,
 [data-testid="stSidebar"] .streamlit-expanderHeader {{
@@ -167,26 +183,20 @@ code, pre, kbd, samp {{
     align-items: center !important;
     gap: 0.4rem !important;
 }}
-
-/* Keep collapse control compact if Streamlit changes icon rendering. */
 [data-testid="stSidebarCollapseButton"],
 [data-testid="collapsedControl"] {{
     min-width: 2.2rem !important;
     width: 2.2rem !important;
     overflow: hidden !important;
 }}
-
-/* Avoid weird spacing/overlap in selectbox and uploader text. */
 [data-baseweb="select"] *,
 [data-testid="stFileUploader"] * {{
     letter-spacing: normal !important;
     word-spacing: normal !important;
 }}
-
 [data-testid="stFileUploader"] button {{
     min-width: 6rem !important;
 }}
-
 [data-testid="stFileUploader"] button [data-testid="stIconMaterial"] {{
     margin-right: 0.25rem !important;
 }}
@@ -473,130 +483,239 @@ elif st.session_state.current_view == "🤖 AI Forensic Investigator":
     if df.empty:
         st.warning("Ledger is empty. Add products first.")
     else:
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            search_input = st.text_input(
-                "Search Product ID",
-                placeholder="e.g. PRD001, 9539, Component-9272"
-            )
-        with col2:
-            st.write("")
-            run_audit = st.button("🔍 Run Forensic Audit", type="primary", use_container_width=True, key="run_audit")
+        # CHANGE 2 — Search box backed by session state so it survives navigation
+        search_input = st.text_input(
+            "Search Product ID",
+            key="investigator_search",
+            placeholder="e.g. PRD-9272, 9272, Component-9272"
+        )
 
-        if search_input:
-            search_clean = search_input.strip().lower().replace("-", "").replace(" ", "")
-            df_copy = df.copy()
-            df_copy["_search_key"] = (
-                df_copy["product_id"]
-                .astype(str)
-                .str.lower()
-                .str.replace("-", "", regex=False)
-                .str.replace(" ", "", regex=False)
-            )
-            match = df_copy[df_copy["_search_key"].str.contains(search_clean, na=False, regex=False)]
+        run_audit = st.button(
+            "🔍 Run Forensic Audit",
+            type="primary",
+            use_container_width=True,
+            key="run_audit"
+        )
 
-            if not match.empty:
-                actual_pid = match.iloc[0]["product_id"]
-                status = str(match.iloc[0]["status"]).upper()
+        # CHANGE 3 — Preserve matching cards across navigation
+        if search_input or st.session_state.matching_products:
+            if search_input:
+                search_terms = [
+                    term.strip().lower().replace("-", "").replace(" ", "")
+                    for term in search_input.split(",")
+                    if term.strip()
+                ]
 
-                st.subheader("📋 Ledger Record")
-                product_info = load_product_data(actual_pid)
-                if product_info:
-                    fields = [(k, v) for k, v in product_info.items() if k not in ["extra_data", "added_timestamp"]]
-                    info_cols = st.columns(3)
-                    for i, (k, v) in enumerate(fields[:9]):
-                        info_cols[i % 3].metric(
-                            k.replace("_", " ").title(),
-                            str(v)[:30] if v else "—"
-                        )
+                matching_products = []
+                df_copy = df.copy()
+                df_copy["_search_key"] = (
+                    df_copy["product_id"]
+                    .astype(str)
+                    .str.lower()
+                    .str.replace("-", "", regex=False)
+                    .str.replace(" ", "", regex=False)
+                )
 
-                if status == "VERIFIED":
-                    st.success(f"✅ {actual_pid} — VERIFIED")
-                elif status == "PENDING":
-                    st.warning(f"⏳ {actual_pid} — PENDING REVIEW")
-                else:
-                    st.error(f"🚨 {actual_pid} — FLAGGED FOR INVESTIGATION")
+                for term in search_terms:
+                    result = df_copy[
+                        df_copy["_search_key"].str.contains(term, na=False, regex=False)
+                    ]
+                    for _, row in result.iterrows():
+                        pid = row["product_id"]
+                        if pid not in [p["product_id"] for p in matching_products]:
+                            matching_products.append(row.to_dict())
 
-                if run_audit:
-                    if actual_pid not in st.session_state.audit_history:
-                        with st.spinner("Running forensic analysis..."):
-                            report = verify_product(actual_pid)
-                            journey = trace_journey(actual_pid)
-                            st.session_state.audit_history[actual_pid] = {
-                                "report": report,
-                                "journey": journey
-                            }
-                    st.session_state.active_product_id = actual_pid
-                    if st.session_state.last_audited != actual_pid:
-                        st.session_state.chat_history = []
-                        st.session_state.last_audited = actual_pid
+                st.session_state.matching_products = matching_products
 
-                if actual_pid in st.session_state.audit_history:
-                    cached = st.session_state.audit_history[actual_pid]
-                    report = cached["report"]
-                    journey = cached["journey"]
+            matching_products = st.session_state.matching_products
 
-                    st.subheader("🧠 AI Forensic Audit Report")
-                    st.info(report)
+            if matching_products:
+                st.subheader("📦 Matching Products")
+                cols = st.columns(3)
 
-                    st.subheader("⛓️ Chain of Custody")
-                    if journey:
-                        cols = st.columns(len(journey))
-                        for step, col in zip(journey, cols):
-                            with col:
-                                if step["verified"]:
-                                    st.success(f"✅ **{step['stage']}**")
-                                else:
-                                    st.error(f"🚨 **{step['stage']}**")
-                                st.caption(step["location"])
-                                st.caption(step["date"])
+                for idx, product in enumerate(matching_products):
+                    with cols[idx % 3]:
+                        with st.container(border=True):
+                            pid = product["product_id"]
+                            history = get_historical_summary(pid)
+                            status = str(product["status"]).upper()
+                            record_hash = product.get("record_hash")
 
-                    st.divider()
-                    st.subheader("📄 Export Audit Report")
-                    product_data = match.iloc[0].to_dict()
-                    with st.spinner("Generating PDF..."):
-                        pdf_bytes = generate_audit_pdf(product_data, journey, report)
+                            st.markdown(f"### {pid}")
 
-                    filename = f"audit_{actual_pid}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-                    st.download_button(
-                        label=f"⬇️ Download {actual_pid} Audit Report (PDF)",
-                        data=pdf_bytes,
-                        file_name=filename,
-                        mime="application/pdf",
-                        type="primary",
-                        key=f"dl_{actual_pid}"
-                    )
+                            if status == "FLAGGED":
+                                st.error("🚨 FLAGGED")
+                            elif status == "VERIFIED":
+                                st.success("✅ VERIFIED")
+                            else:
+                                st.warning("⏳ PENDING")
+                                record_hash = product.get("record_hash")
+                            record_hash = product.get("record_hash", "")
+                            if record_hash:
+                                with st.container(border=True):
+                                    st.markdown("### 🔒 Integrity Verification")
 
-                    st.divider()
-                    st.subheader("💬 Ask the Agent")
-                    st.caption(f"Chatting about: **{actual_pid}**")
+                                    st.markdown("**Algorithm:** SHA-256")
+                                    st.markdown(f"**Status:** {status}")
 
-                    for msg in st.session_state.chat_history:
-                        with st.chat_message(msg["role"]):
-                            st.write(msg["content"])
+                                    st.code(
+                                    record_hash,
+                                    language=None
+        )
 
-                    user_input = st.chat_input(
-                        placeholder=f"Ask about {actual_pid} — e.g. 'Why is it flagged?' or 'What should I do next?'"
-                    )
-                    if user_input:
-                        with st.chat_message("user"):
-                            st.write(user_input)
-                        with st.spinner("Thinking..."):
-                            updated_history, reply = chat_about_product(
-                                actual_pid,
-                                st.session_state.chat_history,
-                                user_input
+                                st.markdown(
+                                "**Status:** VERIFIED"
+        )
+
+                                st.markdown(
+                                "**Result:** Fingerprint successfully stored in ledger"
+        )
+
+                                
+
+                            st.caption(f"Manufacturer: {product['manufacturer']}")
+                            st.caption(f"Location: {product['current_location']}")
+                            st.metric("Events", history["total_events"])
+
+                            if st.button("Open Investigation", key=f"open_{pid}"):
+                                st.session_state.selected_product = pid
+
+                if st.session_state.selected_product is not None:
+                    actual_pid = st.session_state.selected_product
+                    product_info = load_product_data(actual_pid)
+                    selected_row = df[df["product_id"] == actual_pid]
+
+                    if not selected_row.empty:
+                        match = selected_row
+                        status = str(selected_row.iloc[0]["status"]).upper()
+
+                        if product_info:
+                            fields = [
+                                (k, v) for k, v in product_info.items()
+                                if k not in ["extra_data", "added_timestamp"]
+                            ]
+                            info_cols = st.columns(3)
+                            for i, (k, v) in enumerate(fields[:9]):
+                                info_cols[i % 3].metric(
+                                    k.replace("_", " ").title(),
+                                    str(v)[:30] if v else "—"
+                                )
+
+                        historical = get_historical_summary(actual_pid)
+                        if historical:
+                            st.subheader("📚 Historical Ledger Activity")
+
+                            if historical["total_events"] > 15:
+                                st.error("🔴 HIGH HISTORY COMPLEXITY")
+                            elif historical["total_events"] > 8:
+                                st.warning("🟡 MEDIUM HISTORY COMPLEXITY")
+                            else:
+                                st.success("🟢 LOW HISTORY COMPLEXITY")
+
+                            col_a, col_b, col_c = st.columns(3)
+                            col_a.metric("Total Events", historical["total_events"])
+                            col_b.metric("Manufacturers", len(historical["manufacturers"]))
+                            col_c.metric("Locations", len(historical["locations"]))
+
+                            st.markdown(
+                                f"**Manufacturers Seen:** {', '.join(historical['manufacturers'])}\n\n"
+                                f"**Locations Visited:** {', '.join(historical['locations'])}"
                             )
-                            st.session_state.chat_history = updated_history
-                        with st.chat_message("assistant"):
-                            st.write(reply)
 
-                    if st.session_state.chat_history:
-                        if st.button("🗑️ Clear Chat", type="secondary", key=f"clear_chat_{actual_pid}"):
-                            st.session_state.chat_history = []
-                            st.rerun()
-                else:
-                    st.info("👆 Click 'Run Forensic Audit' to analyze this product.")
+                            status_text = " | ".join(
+                                f"{k}: {v}" for k, v in historical["status_counts"].items()
+                            )
+                            st.info(f"Status Breakdown → {status_text}")
+
+                        if status == "VERIFIED":
+                            st.success(f"✅ {actual_pid} — VERIFIED")
+                        elif status == "PENDING":
+                            st.warning(f"⏳ {actual_pid} — PENDING REVIEW")
+                        else:
+                            st.error(f"🚨 {actual_pid} — FLAGGED FOR INVESTIGATION")
+
+                        if run_audit:
+                            if actual_pid not in st.session_state.audit_history:
+                                with st.spinner("Running forensic analysis..."):
+                                    report = verify_product(actual_pid)
+                                    journey = trace_journey(actual_pid)
+                                    st.session_state.audit_history[actual_pid] = {
+                                        "report": report,
+                                        "journey": journey
+                                    }
+                            st.session_state.active_product_id = actual_pid
+                            if st.session_state.last_audited != actual_pid:
+                                st.session_state.chat_history = []
+                                st.session_state.last_audited = actual_pid
+
+                        if actual_pid in st.session_state.audit_history:
+                            cached = st.session_state.audit_history[actual_pid]
+                            report = cached["report"]
+                            journey = cached["journey"]
+
+                            st.subheader("🧠 AI Forensic Audit Report")
+                            st.info(report)
+
+                            st.subheader("⛓️ Chain of Custody")
+                            if journey:
+                                j_cols = st.columns(len(journey))
+                                for step, col in zip(journey, j_cols):
+                                    with col:
+                                        if step["verified"]:
+                                            st.success(f"✅ **{step['stage']}**")
+                                        else:
+                                            st.error(f"🚨 **{step['stage']}**")
+                                        st.caption(step["location"])
+                                        st.caption(step["date"])
+
+                            st.divider()
+                            st.subheader("📄 Export Audit Report")
+                            product_data = load_product_data(actual_pid)
+                            with st.spinner("Generating PDF..."):
+                                pdf_bytes = generate_audit_pdf(product_data, journey, report)
+
+                            filename = f"audit_{actual_pid}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                            st.download_button(
+                                label=f"⬇️ Download {actual_pid} Audit Report (PDF)",
+                                data=pdf_bytes,
+                                file_name=filename,
+                                mime="application/pdf",
+                                type="primary",
+                                key=f"dl_{actual_pid}"
+                            )
+
+                            st.divider()
+                            st.subheader("💬 Ask the Agent")
+                            st.caption(f"Chatting about: **{actual_pid}**")
+
+                            for msg in st.session_state.chat_history:
+                                with st.chat_message(msg["role"]):
+                                    st.write(msg["content"])
+
+                            user_input = st.chat_input(
+                                placeholder=f"Ask about {actual_pid} — e.g. 'Why is it flagged?' or 'What should I do next?'"
+                            )
+                            if user_input:
+                                with st.chat_message("user"):
+                                    st.write(user_input)
+                                with st.spinner("Thinking..."):
+                                    updated_history, reply = chat_about_product(
+                                        actual_pid,
+                                        st.session_state.chat_history,
+                                        user_input
+                                    )
+                                    st.session_state.chat_history = updated_history
+                                with st.chat_message("assistant"):
+                                    st.write(reply)
+
+                            if st.session_state.chat_history:
+                                if st.button("🗑️ Clear Chat", type="secondary", key=f"clear_chat_{actual_pid}"):
+                                    st.session_state.chat_history = []
+                                    st.rerun()
+                        else:
+                            st.info("👆 Click 'Run Forensic Audit' to analyze this product.")
+                    else:
+                        st.error(f"❌ Product '{actual_pid}' not found in ledger.")
             else:
                 st.error(f"❌ No product matching '{search_input}' found in ledger.")
 
@@ -673,7 +792,6 @@ elif st.session_state.current_view == "➕ Add New Product":
             options = ["Ignore"] + database.CORE_FIELDS
             default_index = options.index(best_match) if best_match in options else 0
             confidence = f"{score}%" if score > 0 else "No match"
-
             selection = st.selectbox(
                 f"**'{col}'** → AI suggests: `{best_match or 'Ignore'}` (Confidence: {confidence})",
                 options,
