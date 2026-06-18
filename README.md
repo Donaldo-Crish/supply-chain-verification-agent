@@ -1,11 +1,12 @@
 # 🔗 Supply Chain Verification Agent
 
-> An AI-powered, terminal-to-web agent designed to simulate immutable ledger tracking, validate product provenance, and autonomously detect supply chain anomalies.
+> An AI-powered, terminal-to-web agent that simulates immutable ledger tracking, cryptographically fingerprints every record, and autonomously investigates supply chain anomalies.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
-![Streamlit](https://img.shields.io/badge/Streamlit-UI-red?style=flat-square&logo=streamlit)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.58+-red?style=flat-square&logo=streamlit)
 ![Groq](https://img.shields.io/badge/Groq-LLaMA_3.3_70B-orange?style=flat-square)
 ![SQLite](https://img.shields.io/badge/SQLite-Ledger-lightgrey?style=flat-square&logo=sqlite)
+![SHA-256](https://img.shields.io/badge/Integrity-SHA--256-9cf?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ---
@@ -14,68 +15,26 @@
 
 Modern supply chains suffer from fragmented data pipelines, opaque transit logs, and an ever-growing risk of counterfeit product injection. Traditional auditing systems are reactive — they catch problems after the damage is done.
 
-The **Supply Chain Verification Agent** is a proactive, AI-driven auditor. It cross-references manufacturing records, transit checkpoints, and batch metadata to guarantee product authenticity — mirroring the validation protocols used in decentralized enterprise networks like Hyperledger Fabric.
+The **Supply Chain Verification Agent** is a proactive, AI-driven auditor. Every record entering the ledger is cryptographically fingerprinted with SHA-256, normalized through a fuzzy-matching semantic mapper, and made available to a reasoning LLM that reconstructs a simulated chain of custody, flags anomalies, and explains *why*.
 
-Built as a full-stack AI agent, it combines a reasoning LLM, a structured ledger, semantic data ingestion, and a real-time analytics dashboard into a single deployable web application.
+This is a **simulated ledger**, not a live blockchain — but the verification logic (hashing, immutability checks, chain-of-custody reconstruction) is designed to map cleanly onto a real distributed ledger like Hyperledger Fabric later, without changing the agent's reasoning layer.
 
 ---
 
 ## 🏗️ System Architecture
 
-```mermaid
-graph TD
-    %% Custom Styles
-    classDef default fill:#1E293B,stroke:#475569,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
-    classDef highlight fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
-    classDef ai fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
-    classDef ui fill:#064E3B,stroke:#34D399,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
-    classDef db fill:#450A0A,stroke:#F87171,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
-
-    %% Main Flow
-    A["📄 <b>CSV PRODUCT DATA</b><br/><br/>• Product Records<br/>• Supplier Information<br/>• Batch Details<br/>• Location Updates"]:::default
-    
-    B["⚙️ <b>DATA NORMALIZATION</b><br/><br/>• Synonym Mapping<br/>• Field Validation<br/>• Missing Data Handling<br/>• Status Standardization"]:::default
-    
-    C["🔒 <b>SHA-256 VERIFICATION</b><br/><br/>• Record Fingerprinting<br/>• Integrity Validation<br/>• Tamper Detection"]:::default
-    
-    D["🗄️ <b>SQLITE LEDGER</b><br/><br/>• Product Storage<br/>• Immutable Records<br/>• Hash Persistence<br/>• Audit Trail"]:::db
-
-    A --> B
-    B --> C
-    C --> D
-
-    %% Split
-    D -->|Data Feed| E
-    D -->|Context Feed| F
-
-    E["📊 <b>ANALYTICS DASHBOARD</b><br/><br/>• Product Metrics<br/>• Risk Statistics<br/>• Status Distribution<br/>• Manufacturer Insights"]:::highlight
-    
-    F["🔍 <b>FORENSIC INVESTIGATION</b><br/><br/>• Product Search<br/>• Chain Analysis<br/>• Pattern Detection<br/>• Risk Assessment"]:::highlight
-
-    F -->|Triggers| G
-
-    G["🤖 <b>AI FORENSIC AGENT</b><br/><i>Groq API | Llama 3.3 70B</i><br/><br/>• Root Cause Analysis<br/>• Investigation Reports<br/>• Risk Explanations"]:::ai
-
-    %% Merge
-    E --> H
-    G --> H
-
-    H["📑 <b>AUDIT REPORTING</b><br/><br/>• PDF Export<br/>• Chain of Custody<br/>• SHA Verification<br/>• Audit Summary"]:::default
-
-    H --> I
-
-    I["🌐 <b>STREAMLIT WEB APP</b><br/><br/>• Analytics Dashboard<br/>• Ledger Explorer<br/>• AI Investigator<br/>• Product Management"]:::ui
-    ```
+![Architecture Diagram](architecture-diagram.svg)
 
 ### How It Works
 
-1. **Data Ingestion** — Raw supply chain data (CSV or manual entry) is ingested through a semantic mapper that normalizes any column schema into the core ledger fields. Unmapped columns are preserved in a JSON blob for AI context.
-
-2. **Reasoning Engine** — Each product verification triggers a forensic prompt to LLaMA 3.3 70B via Groq API. The model identifies *why* something is flagged, assigns a risk level (LOW / MEDIUM / HIGH), and gives an actionable recommendation.
-
-3. **Anomaly Detection** — The agent evaluates unverified transit stages, suspicious location hops, and cross-manufacturer flag patterns to surface systemic risks — not just individual product issues.
-
-4. **State Management** — Every record is logged with a timestamp in SQLite, simulating a tamper-proof audit history with indexed queries for fast retrieval at scale.
+1. **Data Ingestion** — Products are added one at a time via a form, or in bulk via CSV upload. The semantic mapper (`thefuzz`) scores each incoming column against a synonym table and suggests a target field with a confidence percentage; any column you don't map is preserved as a JSON blob (`extra_data`) instead of being discarded.
+2. **Status Normalization** — Arbitrary status strings (`pass`, `cleared`, `fail`, `hold`, etc.) are normalized into one of three ledger states: `VERIFIED`, `FLAGGED`, or `PENDING`.
+3. **Cryptographic Fingerprinting** — Each record is hashed with SHA-256 over its product ID, manufacturer, batch ID, location, and status, producing a unique fingerprint stored alongside the row.
+4. **Ledger Storage** — Records land in an indexed SQLite table (`product_id`, `status`, `manufacturer`) for fast filtering at scale.
+5. **Forensic Reasoning** — Verifying a product triggers a prompt to Llama 3.3 70B via Groq. The model is handed the record, a simulated chain-of-custody (Manufacturer → Quality Control → Transit → Distribution), and a historical event count cross-referenced against the original `products.csv` import — then returns a status, a specific reason, a risk level, and one recommendation.
+6. **Manufacturer Pattern Detection** — A SQL aggregation surfaces the manufacturers with the highest flagged-product counts; the same reasoning engine writes a short executive summary of the systemic risk.
+7. **Conversational Follow-up** — A chat interface answers free-form questions about a specific product, grounded in its ledger record, simulated journey, and historical count.
+8. **Audit Export** — A ReportLab-generated PDF captures the product details, SHA-256 fingerprint, chain-of-custody table, and the AI's findings for compliance record-keeping.
 
 ---
 
@@ -84,13 +43,14 @@ graph TD
 | Layer | Technology |
 |---|---|
 | Backend & Logic | Python 3.10+ |
-| Database | SQLite + Pandas |
-| AI / LLM | Groq API — LLaMA 3.3 70B |
-| Semantic Mapping | thefuzz (fuzzy string matching) |
-| Frontend UI | Streamlit |
-| PDF Export | ReportLab |
-| Data Visualization | Plotly Express |
-| Deployment | Streamlit Cloud |
+| Frontend UI | Streamlit ≥ 1.58 |
+| Database | SQLite + Pandas ≥ 3.0.3 |
+| AI / LLM | Groq API — `llama-3.3-70b-versatile` |
+| Integrity | SHA-256 (`hashlib`) |
+| Semantic Mapping | thefuzz ≥ 0.22.1 (fuzzy synonym matching) |
+| Data Visualization | Plotly Express ≥ 6.8.0 |
+| PDF Export | ReportLab ≥ 4.5.1 |
+| Config | python-dotenv ≥ 1.2.2 |
 
 ---
 
@@ -102,7 +62,7 @@ git clone https://github.com/Donaldo-Crish/supply-chain-verification-agent.git
 cd supply-chain-verification-agent
 ```
 
-### 2. Create & Activate Virtual Environment
+### 2. Create & Activate a Virtual Environment
 ```bash
 python -m venv venv
 
@@ -123,14 +83,13 @@ Create a `.env` file in the root directory:
 ```
 GROQ_API_KEY=your_groq_api_key_here
 ```
-Get your free API key at [console.groq.com](https://console.groq.com)
+Get a free API key at [console.groq.com](https://console.groq.com). Without it, the app still runs and the ledger still works — AI analysis simply returns a "not configured" notice instead of a forensic report.
 
-### 5. Run the Agent
+### 5. Make Sure `products.csv` Is Present
+The historical event lookup (used in both the AI Forensic Investigator and the agent's reasoning prompts) reads directly from `products.csv` in the project root, separately from the live SQLite ledger. Keep a copy of your product manifest there even after you've ingested it into the database.
+
+### 6. Run the App
 ```bash
-# Test the backend reasoning engine directly
-python agent.py
-
-# Launch the full web application
 streamlit run app.py
 ```
 
@@ -138,13 +97,17 @@ streamlit run app.py
 
 ## 🔑 Key Features
 
-- **🧠 Forensic AI Reasoning** — Explains *why* a product is flagged with specific risk levels and recommendations
-- **🏭 Manufacturer Pattern Detection** — Identifies systemic risks across multiple flagged products from the same source
-- **💬 Contextual Chat Interface** — Ask follow-up questions about any verified product in natural language
-- **📄 PDF Audit Export** — Professional audit reports downloadable for compliance and record-keeping
-- **📊 Analytics Dashboard** — Real-time charts: status distribution, flagged by location, manufacturer risk, manufacturing timeline, and risk heatmap
-- **🔄 Semantic Bulk Ingestion** — Upload any CSV schema — the mapper intelligently normalizes column names using fuzzy matching and synonym detection
-- **➕ Live Ledger Management** — Add, update, and reset product records directly from the UI
+- **🔒 SHA-256 Record Fingerprinting** — every ledger entry is hashed (product ID + manufacturer + batch + location + status) and the fingerprint is surfaced in both the UI and the PDF export.
+- **🧠 Forensic AI Reasoning** — explains *why* a product is flagged, pending, or verified, assigns a LOW / MEDIUM / HIGH risk level, and gives one actionable recommendation.
+- **🏭 Manufacturer Risk Pattern Detection** — a one-click scan aggregates flag rates per manufacturer and has the AI write an executive summary of the riskiest sources.
+- **🔍 Multi-Product Forensic Search** — punctuation-insensitive, comma-separated search (`PRD-9272`, `9272`, `Component-9272` all match) returns matching product cards with live status and SHA-256 verification badges.
+- **💬 Contextual Chat per Product** — ask follow-up questions grounded in the product's ledger record, simulated chain of custody, and historical event count.
+- **📄 PDF Audit Export** — a ReportLab report with a color-coded status badge, cryptographic fingerprint box, chain-of-custody table, and the AI's findings.
+- **📊 Analytics Dashboard** — live metrics (total / verified / flagged / risk rate / node velocity) plus anomaly-by-location, top flagged manufacturers, risk distribution, a manufacturing timeline, and a manufacturer × location risk heatmap.
+- **🔄 Semantic Bulk Ingestion** — upload any CSV schema; fuzzy matching suggests a column mapping with a confidence score, with manual override per column before you commit.
+- **📇 Immutable Ledger Browser** — filter by status, manufacturer, or location with color-coded rows.
+- **➕ Live Ledger Management** — add records via form, bulk-ingest via CSV, or wipe the ledger from a confirmation-gated "Danger Zone" (must type `DELETE`).
+- **🎨 Font Customization** — switch the entire UI between Poppins, Inter, and JetBrains Mono.
 
 ---
 
@@ -152,33 +115,37 @@ streamlit run app.py
 
 ```
 supply-chain-verification-agent/
-├── agent.py           # Groq API reasoning engine, chat, pattern detection
-├── app.py             # Streamlit frontend — all tabs and UI logic
-├── database.py        # SQLite ledger, semantic mapper, cached queries
-├── pdf_export.py      # ReportLab PDF generation
-├── migrate_data.py    # CSV to SQLite migration utility
-├── products.csv       # Sample product ledger data
-├── .gitignore         # Excludes .env, venv, __pycache__, *.db
-└── README.md          # You are here
+├── app.py                   # Streamlit frontend — all 4 views, sidebar, styling
+├── agent.py                 # Groq reasoning engine, chat, journey simulation, risk patterns
+├── database.py              # SQLite ledger, SHA-256 hashing, semantic mapper
+├── pdf_export.py             # ReportLab audit PDF generation
+├── architecture-diagram.svg # System architecture diagram (this README)
+├── products.csv             # Source manifest — also used for historical lookups
+├── requirements.txt
+├── .env                      # GROQ_API_KEY (gitignored)
+├── .gitignore                # Excludes .env, venv, __pycache__, *.db
+└── README.md                 # You are here
 ```
+
+> Screenshots will be added once the UI is fully polished.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [ ] **Blockchain Integration** — Migrate from SQLite to a live decentralized node (Ethereum / Hyperledger Fabric / Corda Enterprise) for cryptographic, tamper-proof validation
-- [ ] **Multi-Agent Reasoning** — Parallel AI agents handling different supply chain segments simultaneously for complex logistical bottleneck detection
-- [ ] **RFID / IoT Integration** — Real-time checkpoint scanning feeding directly into the verification pipeline
-- [ ] **Email / Webhook Alerts** — Automated notifications when high-risk products are detected
-- [ ] **Role-Based Access Control** — Separate views for auditors, suppliers, and administrators
+- [ ] **Blockchain Integration** — migrate from SQLite to a live decentralized node (Ethereum / Hyperledger Fabric / Corda Enterprise) for cryptographically enforced immutability
+- [ ] **Multi-Agent Reasoning** — parallel AI agents handling different supply chain segments simultaneously
+- [ ] **RFID / IoT Integration** — real-time checkpoint scanning feeding directly into the verification pipeline
+- [ ] **Email / Webhook Alerts** — automated notifications when high-risk products are detected
+- [ ] **Role-Based Access Control** — separate views for auditors, suppliers, and administrators
 
 ---
 
 ## 👤 Author
 
 **Pravin S** (Donaldo-Crish)
-Pravin S | Mechatronics engineering & Automation | AI Agent Architect
+Mechatronics Engineering & Automation | AI Agent Architect
 
 ---
 
-*Built with LLaMA 3.3 70B via Groq API — one of the fastest open-source inference engines available.*
+*Built with Llama 3.3 70B via Groq API.*
