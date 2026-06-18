@@ -155,9 +155,13 @@ supply-chain-verification-agent/
 
 ## 👤 Author
 
-**Pravin S** (Donaldo-Crish)
+**Pravin S** 
 Mechatronics Engineering & Automation | AI Agent Architect
 
 ---
 
 *Built with Llama 3.3 70B via Groq API.*
+
+## 🤝 Acknowledgements
+
+Development of this project was accelerated through the use of AI-assisted tools including ChatGPT, Claude, Gemini, and Perplexity for brainstorming, debugging, documentation, and design iteration.
