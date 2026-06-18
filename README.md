@@ -22,8 +22,8 @@ Built as a full-stack AI agent, it combines a reasoning LLM, a structured ledger
 
 ## 🏗️ System Architecture
 
-```
-'''graph TD
+```mermaid
+graph TD
     %% Custom Styles
     classDef default fill:#1E293B,stroke:#475569,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
     classDef highlight fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
@@ -64,7 +64,8 @@ Built as a full-stack AI agent, it combines a reasoning LLM, a structured ledger
 
     H --> I
 
-    I["🌐 <b>STREAMLIT WEB APP</b><br/><br/>• Analytics Dashboard<br/>• Ledger Explorer<br/>• AI Investigator<br/>• Product Management"]:::ui'''
+    I["🌐 <b>STREAMLIT WEB APP</b><br/><br/>• Analytics Dashboard<br/>• Ledger Explorer<br/>• AI Investigator<br/>• Product Management"]:::ui
+    ```
 
 ### How It Works
 
