@@ -1,6 +1,6 @@
 # 🔗 Supply Chain Verification Agent
 
-> An AI-powered, terminal-to-web agent that simulates immutable ledger tracking, cryptographically fingerprints every record, and autonomously investigates supply chain anomalies.
+> An AI-powered supply chain auditing and verification platform that cryptographically fingerprints records, analyzes historical ledger data, and generates forensic audit reports.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.58+-red?style=flat-square&logo=streamlit)
@@ -17,9 +17,21 @@ Modern supply chains suffer from fragmented data pipelines, opaque transit logs,
 
 The **Supply Chain Verification Agent** is a proactive, AI-driven auditor. Every record entering the ledger is cryptographically fingerprinted with SHA-256, normalized through a fuzzy-matching semantic mapper, and made available to a reasoning LLM that reconstructs a simulated chain of custody, flags anomalies, and explains *why*.
 
-This is a **simulated ledger**, not a live blockchain — but the verification logic (hashing, immutability checks, chain-of-custody reconstruction) is designed to map cleanly onto a real distributed ledger like Hyperledger Fabric later, without changing the agent's reasoning layer.
+This project uses a SQLite-backed ledger with SHA-256 integrity verification. While it is not a blockchain implementation, it demonstrates how cryptographic fingerprints, audit trails, and verification workflows can be applied to supply-chain records.
+
+The architecture is intentionally modular so the storage layer could later be replaced with a distributed ledger such as Hyperledger Fabric without redesigning the reasoning layer.
 
 ---
+
+## 🎯 Project Scope
+
+This project focuses on auditing and verification of historical supply-chain records rather than real-time shipment tracking.
+
+Product records are ingested into a SQLite-backed ledger, normalized through fuzzy semantic mapping, cryptographically fingerprinted using SHA-256, and analyzed using an AI forensic investigator.
+
+The current implementation demonstrates supply-chain auditing, anomaly investigation, manufacturer risk analysis, conversational product analysis, and compliance-style reporting.
+
+Future versions could integrate RFID systems, IoT sensors, ERP platforms, blockchain networks, or logistics APIs for real-time event tracking.
 
 ## 🏗️ System Architecture
 
@@ -103,9 +115,9 @@ streamlit run app.py
 - **🔍 Multi-Product Forensic Search** — punctuation-insensitive, comma-separated search (`PRD-9272`, `9272`, `Component-9272` all match) returns matching product cards with live status and SHA-256 verification badges.
 - **💬 Contextual Chat per Product** — ask follow-up questions grounded in the product's ledger record, simulated chain of custody, and historical event count.
 - **📄 PDF Audit Export** — a ReportLab report with a color-coded status badge, cryptographic fingerprint box, chain-of-custody table, and the AI's findings.
-- **📊 Analytics Dashboard** — live metrics (total / verified / flagged / risk rate / node velocity) plus anomaly-by-location, top flagged manufacturers, risk distribution, a manufacturing timeline, and a manufacturer × location risk heatmap.
+- **📊 Analytics Dashboard** — 📊 Analytics Dashboard — live metrics, anomaly visualizations, manufacturer risk analysis, location-based anomaly tracking, manufacturing timelines, and risk heatmaps.
 - **🔄 Semantic Bulk Ingestion** — upload any CSV schema; fuzzy matching suggests a column mapping with a confidence score, with manual override per column before you commit.
-- **📇 Immutable Ledger Browser** — filter by status, manufacturer, or location with color-coded rows.
+- **📇 📇 Ledger Browser & Record Explorer** — filter by status, manufacturer, or location with color-coded rows.
 - **➕ Live Ledger Management** — add records via form, bulk-ingest via CSV, or wipe the ledger from a confirmation-gated "Danger Zone" (must type `DELETE`).
 - **🎨 Font Customization** — switch the entire UI between Poppins, Inter, and JetBrains Mono.
 
@@ -118,13 +130,13 @@ supply-chain-verification-agent/
 ├── app.py                   # Streamlit frontend — all 4 views, sidebar, styling
 ├── agent.py                 # Groq reasoning engine, chat, journey simulation, risk patterns
 ├── database.py              # SQLite ledger, SHA-256 hashing, semantic mapper
-├── pdf_export.py             # ReportLab audit PDF generation
+├── pdf_export.py            # ReportLab audit PDF generation
 ├── architecture-diagram.svg # System architecture diagram (this README)
 ├── products.csv             # Source manifest — also used for historical lookups
 ├── requirements.txt
-├── .env                      # GROQ_API_KEY (gitignored)
-├── .gitignore                # Excludes .env, venv, __pycache__, *.db
-└── README.md                 # You are here
+├── .env                     # GROQ_API_KEY (gitignored)
+├── .gitignore               # Excludes .env, venv, __pycache__, *.db
+└── README.md                # You are here
 ```
 
 > Screenshots will be added once the UI is fully polished.
