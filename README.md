@@ -65,6 +65,7 @@ graph TD
     H --> I
 
     I["🌐 <b>STREAMLIT WEB APP</b><br/><br/>• Analytics Dashboard<br/>• Ledger Explorer<br/>• AI Investigator<br/>• Product Management"]:::ui
+    ```
 
 ### How It Works
 
