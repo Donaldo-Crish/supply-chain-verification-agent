@@ -23,32 +23,48 @@ Built as a full-stack AI agent, it combines a reasoning LLM, a structured ledger
 ## 🏗️ System Architecture
 
 ```
-CSV / ERP Manifest
-        │
-        ▼
-┌─────────────────────┐
-│  Semantic Mapper     │  ← Fuzzy + synonym matching for any column schema
-│  (database.py)       │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  SQLite Ledger       │  ← Indexed, structured, tamper-logged storage
-│  (supply_chain.db)   │
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  Reasoning Engine    │  ← LLaMA 3.3 70B via Groq API
-│  (agent.py)          │  ← Forensic audit, pattern detection, chat
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  Streamlit Frontend  │  ← Verification UI, analytics dashboard, PDF export
-│  (app.py)            │
-└─────────────────────┘
-```
+'''graph TD
+    %% Custom Styles
+    classDef default fill:#1E293B,stroke:#475569,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
+    classDef highlight fill:#0F172A,stroke:#3B82F6,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
+    classDef ai fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
+    classDef ui fill:#064E3B,stroke:#34D399,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
+    classDef db fill:#450A0A,stroke:#F87171,stroke-width:2px,color:#F8FAFC,rx:8px,ry:8px;
+
+    %% Main Flow
+    A["📄 <b>CSV PRODUCT DATA</b><br/><br/>• Product Records<br/>• Supplier Information<br/>• Batch Details<br/>• Location Updates"]:::default
+    
+    B["⚙️ <b>DATA NORMALIZATION</b><br/><br/>• Synonym Mapping<br/>• Field Validation<br/>• Missing Data Handling<br/>• Status Standardization"]:::default
+    
+    C["🔒 <b>SHA-256 VERIFICATION</b><br/><br/>• Record Fingerprinting<br/>• Integrity Validation<br/>• Tamper Detection"]:::default
+    
+    D["🗄️ <b>SQLITE LEDGER</b><br/><br/>• Product Storage<br/>• Immutable Records<br/>• Hash Persistence<br/>• Audit Trail"]:::db
+
+    A --> B
+    B --> C
+    C --> D
+
+    %% Split
+    D -->|Data Feed| E
+    D -->|Context Feed| F
+
+    E["📊 <b>ANALYTICS DASHBOARD</b><br/><br/>• Product Metrics<br/>• Risk Statistics<br/>• Status Distribution<br/>• Manufacturer Insights"]:::highlight
+    
+    F["🔍 <b>FORENSIC INVESTIGATION</b><br/><br/>• Product Search<br/>• Chain Analysis<br/>• Pattern Detection<br/>• Risk Assessment"]:::highlight
+
+    F -->|Triggers| G
+
+    G["🤖 <b>AI FORENSIC AGENT</b><br/><i>Groq API | Llama 3.3 70B</i><br/><br/>• Root Cause Analysis<br/>• Investigation Reports<br/>• Risk Explanations"]:::ai
+
+    %% Merge
+    E --> H
+    G --> H
+
+    H["📑 <b>AUDIT REPORTING</b><br/><br/>• PDF Export<br/>• Chain of Custody<br/>• SHA Verification<br/>• Audit Summary"]:::default
+
+    H --> I
+
+    I["🌐 <b>STREAMLIT WEB APP</b><br/><br/>• Analytics Dashboard<br/>• Ledger Explorer<br/>• AI Investigator<br/>• Product Management"]:::ui'''
 
 ### How It Works
 
