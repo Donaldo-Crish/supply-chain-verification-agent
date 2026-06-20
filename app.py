@@ -1260,7 +1260,7 @@ elif st.session_state.current_view == "⬢ Registry Operations":
             if selection != "Ignore":
                 user_confirmed_map[col] = selection
  
-        if st.button("Commit Mappings & Ingest", type="primary", key="commit_ingest"):
+        if st.button("Confirm mappings and Upload", type="primary", key="commit_ingest"):
             with st.spinner(f"Ingesting {len(bulk_df):,} products..."):
                 inserted, skipped = database.bulk_insert_products(
                     bulk_df,
