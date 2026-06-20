@@ -119,8 +119,6 @@ streamlit run app.py
 - **🔄 Semantic Bulk Ingestion** — upload any CSV schema; fuzzy matching suggests a column mapping with a confidence score, with manual override per column before you commit.
 - **📇 📇 Ledger Browser & Record Explorer** — filter by status, manufacturer, or location with color-coded rows.
 - **➕ Live Ledger Management** — add records via form, bulk-ingest via CSV, or wipe the ledger from a confirmation-gated "Danger Zone" (must type `DELETE`).
-- **🎨 Font Customization** — switch the entire UI between Poppins, Inter, and JetBrains Mono.
-
 ---
 
 ## 📁 Project Structure
