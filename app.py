@@ -52,6 +52,7 @@ def handle_sidebar_upload():
         st.session_state.sidebar_file_bytes = uploaded.getvalue()
         st.session_state.sidebar_file_name = uploaded.name
         st.session_state.current_view = "⬢ Registry Operations"
+
  
 # ─── STATUS BADGE HELPER ──────────────────────────────────────────────────────
 def status_badge_html(status, size="normal"):
@@ -605,6 +606,14 @@ unsafe_allow_html=True
         key="sidebar_uploader",
         on_change=handle_sidebar_upload,
         label_visibility="collapsed"
+    )
+
+    with open("demo_products.csv", "rb") as file:
+     st.download_button(
+        label="📥 Download Sample Dataset",
+        data=file,
+        file_name="demo_products.csv",
+        mime="text/csv"
     )
     if st.session_state.sidebar_file_name:
         st.caption(f"Loaded: {st.session_state.sidebar_file_name}")
