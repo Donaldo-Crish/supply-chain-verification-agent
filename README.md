@@ -1,6 +1,7 @@
-# 🔗 **Supply Chain Verification Agent**
+# **🔗NEXUS TRACE** | ***Supply Chain Forensics Platform***
 
-> An AI-powered supply chain auditing and verification platform that cryptographically fingerprints records, analyzes historical ledger data, and generates forensic audit reports.
+
+> ***An AI-powered supply chain auditing and verification platform that cryptographically fingerprints supply-chain records, analyzes historical ledger data, and generates forensic audit reports.***
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.58+-red?style=flat-square&logo=streamlit)
@@ -11,11 +12,11 @@
 
 ---
 
-## 📌 Overview
+# 📌 **Overview**
 
 Modern supply chains suffer from fragmented data pipelines, opaque transit logs, and an ever-growing risk of counterfeit product injection. Traditional auditing systems are reactive — they catch problems after the damage is done.
 
-The **Supply Chain Verification Agent** is a proactive, AI-driven auditor. Every record entering the ledger is cryptographically fingerprinted with SHA-256, normalized through a fuzzy-matching semantic mapper, and made available to a reasoning LLM that reconstructs a simulated chain of custody, flags anomalies, and explains *why*.
+The **NEXUS TRACE** is an AI-driven auditing and forensic analysis platform for supply-chain records. Every record entering the ledger is cryptographically fingerprinted with SHA-256, normalized through a fuzzy-matching semantic mapper, and made available to a reasoning LLM that reconstructs a simulated chain of custody, identifies anomalies, and explains why a record may require further investigation.
 
 This project uses a SQLite-backed ledger with SHA-256 integrity verification. While it is not a blockchain implementation, it demonstrates how cryptographic fingerprints, audit trails, and verification workflows can be applied to supply-chain records.
 
@@ -115,9 +116,9 @@ streamlit run app.py
 - **🔍 Multi-Product Forensic Search** — punctuation-insensitive, comma-separated search (`PRD-9272`, `9272`, `Component-9272` all match) returns matching product cards with live status and SHA-256 verification badges.
 - **💬 Contextual Chat per Product** — ask follow-up questions grounded in the product's ledger record, simulated chain of custody, and historical event count.
 - **📄 PDF Audit Export** — a ReportLab report with a color-coded status badge, cryptographic fingerprint box, chain-of-custody table, and the AI's findings.
-- **📊 Analytics Dashboard** — 📊 Analytics Dashboard — live metrics, anomaly visualizations, manufacturer risk analysis, location-based anomaly tracking, manufacturing timelines, and risk heatmaps.
+- **📊 Analytics Dashboard** — live metrics, anomaly visualizations, manufacturer risk analysis, location-based anomaly tracking, manufacturing timelines, and risk heatmaps.
 - **🔄 Semantic Bulk Ingestion** — upload any CSV schema; fuzzy matching suggests a column mapping with a confidence score, with manual override per column before you commit.
-- **📇 📇 Ledger Browser & Record Explorer** — filter by status, manufacturer, or location with color-coded rows.
+- **📇 Ledger Browser & Record Explorer** — filter by status, manufacturer, or location with color-coded rows.
 - **➕ Live Ledger Management** — add records via form, bulk-ingest via CSV, or wipe the ledger from a confirmation-gated "Danger Zone" (must type `DELETE`).
 ---
 
