@@ -1,4 +1,4 @@
-# 🔗 Supply Chain Verification Agent
+# 🔗 **Supply Chain Verification Agent**
 
 > An AI-powered supply chain auditing and verification platform that cryptographically fingerprints records, analyzes historical ledger data, and generates forensic audit reports.
 
