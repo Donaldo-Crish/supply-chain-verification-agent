@@ -714,11 +714,11 @@ if st.session_state.current_view == "⌂ HOME PAGE":
 Supply Chain Intelligence & Forensic Analysis Platform
 </div>
 
-<div style="font-size:32px;font-weight:700;margin-bottom:20px;font-family:'DM Serif Display',serif;font-style:italic;text-align:center;">
+<div style="color:#22D3EE;font-size:32px;font-weight:700;margin-bottom:20px;font-family:'DM Serif Display',serif;font-style:italic;text-align:center;">
 Track. Verify. Investigate.
 </div>
 
-<div style="font-size:18px;line-height:1.8;font-weight:700;font-style:italic;">
+<div style="font-size:18px;line-height:1.8;font-weight:600;font-style:bold;">
 Modern supply chains generate thousands of records every day.
 NEXUS TRACE verifies product authenticity, detects suspicious activity,
 identifies counterfeit risks, and assists forensic investigations through
@@ -736,8 +736,10 @@ an immutable audit ledger and AI-powered analysis.
                 file_name="demo_products.csv",
                 mime="text/csv"
             )
-       
-
+    st.caption(
+    "Demo dataset is preloaded for demonstration purposes. "
+    "Delete and Upload your own dataset via Registry Operations for custom analysis."
+    )
 
     with hero_col2:
         st.success("🟢 AI Monitor Online")
