@@ -108,6 +108,14 @@ The historical event lookup (used in both the AI Forensic Investigator and the a
 streamlit run app.py
 ```
 
+## 📸 Screenshots
+
+![Home Page](screenshots/Home%20page.png)
+![Analytics Dashboard](screenshots/Analytics%20dashboard.png)
+![Immutable Ledger](screenshots/Immutable%20Ledger.png)
+![AI Analyzer](screenshots/AI%20Analyzer%20tab.png)
+![Audit Report](screenshots/Audit%20report%20page.png)
+![Registry Operations](screenshots/Registry%20operations.png)
 ---
 
 ## 🔑 Key Features
@@ -140,7 +148,7 @@ supply-chain-verification-agent/
 └── README.md                # You are here
 ```
 
-> Screenshots will be added once the UI is fully polished.
+
 
 ---
 
