@@ -738,7 +738,7 @@ an immutable audit ledger and AI-powered analysis.
             )
     st.caption(
     "Demo dataset is preloaded for demonstration purposes. "
-    "Delete and Upload your own dataset via Registry Operations for custom analysis."
+    "You may Delete the existing one and Upload your own dataset via Registry Operations for custom analysis."
     )
 
     with hero_col2:
