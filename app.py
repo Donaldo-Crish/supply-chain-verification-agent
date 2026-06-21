@@ -134,11 +134,11 @@ st.html("""
     --status-pending: #FFA15A;
 
     /* ── Gradient palette ── */
-    --clr-dark-red:    #7B1D1D;
-    --clr-light-red:   #EF4444;
-    --clr-dark-orange: #92400E;
-    --clr-light-orange:#F97316;
-    --clr-dark-yellow: #854D0E;
+    --clr-dark-red:    #0891B2;
+    --clr-light-red:   #22D3EE;
+    --clr-dark-orange: #B8860B;
+    --clr-light-orange:#D4AF37;
+    --clr-dark-yellow: #D4AF37;
     --clr-light-yellow:#FBBF24;
     --clr-ash:         #9CA3AF;
     --clr-silver:      #CBD5E1;
