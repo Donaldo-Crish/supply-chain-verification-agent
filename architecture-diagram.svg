@@ -1,23 +1,28 @@
-<svg width="1000" height="2150" viewBox="0 0 1000 2150" xmlns="http://www.w3.org/2000/svg">
+<svg width="900" height="1900" viewBox="0 0 900 1900" xmlns="http://www.w3.org/2000/svg">
 <defs>
   <linearGradient id="gradBG" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#0b1020"/>
-    <stop offset="100%" stop-color="#191333"/>
+    <stop offset="0%" stop-color="#080d18"/>
+    <stop offset="100%" stop-color="#0f1520"/>
   </linearGradient>
-  <radialGradient id="glowBlue" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/>
-    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+
+  <radialGradient id="glowCyan" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.18"/>
+    <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
   </radialGradient>
-  <radialGradient id="glowPink" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#db2777" stop-opacity="0.20"/>
-    <stop offset="100%" stop-color="#db2777" stop-opacity="0"/>
+  <radialGradient id="glowGold" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#d4af37" stop-opacity="0.15"/>
+    <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
   </radialGradient>
 
+  <!-- Title gradient: cyan → gold -->
   <linearGradient id="gradTitle" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0%" stop-color="#93c5fd"/>
-    <stop offset="100%" stop-color="#d8b4fe"/>
+    <stop offset="0%" stop-color="#22D3EE"/>
+    <stop offset="40%" stop-color="#0891B2"/>
+    <stop offset="70%" stop-color="#D4AF37"/>
+    <stop offset="100%" stop-color="#22D3EE"/>
   </linearGradient>
 
+  <!-- Box gradients — vivid, colorful -->
   <linearGradient id="gradBlue" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/>
   </linearGradient>
@@ -46,6 +51,7 @@
     <stop offset="0%" stop-color="#a5f3fc"/><stop offset="100%" stop-color="#0e7490"/>
   </linearGradient>
 
+  <!-- Arrow gradients -->
   <linearGradient id="arrBlueIndigo" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#818cf8"/>
   </linearGradient>
@@ -75,7 +81,7 @@
   </linearGradient>
 
   <filter id="boxShadow" x="-30%" y="-30%" width="160%" height="160%">
-    <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
+    <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
   </filter>
 
   <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -83,114 +89,113 @@
   </marker>
 </defs>
 
-<rect x="0" y="0" width="1000" height="2150" fill="url(#gradBG)"/>
-<circle cx="120" cy="180" r="260" fill="url(#glowBlue)"/>
-<circle cx="880" cy="1400" r="320" fill="url(#glowPink)"/>
+<!-- Background -->
+<rect x="0" y="0" width="900" height="1900" fill="url(#gradBG)"/>
+<circle cx="100" cy="160" r="240" fill="url(#glowCyan)"/>
+<circle cx="800" cy="1300" r="280" fill="url(#glowGold)"/>
 
-<text x="500" y="68" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="36" font-weight="700" fill="url(#gradTitle)">🔗 Supply Chain Verification Agent</text>
-<text x="500" y="102" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#94a3b8">AI-Powered Product Provenance &amp; Ledger Verification Platform</text>
-<line x1="350" y1="124" x2="650" y2="124" stroke="#334155" stroke-width="1.5" opacity="0.7"/>
+<!-- ── TITLE ── -->
+<text x="450" y="58" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="800" fill="url(#gradTitle)">◈ NEXUS TRACE</text>
+<text x="450" y="88" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#94a3b8">AI Supply Chain Intelligence Platform</text>
+<line x1="300" y1="106" x2="600" y2="106" stroke="#22d3ee" stroke-width="1" opacity="0.35"/>
 
-<!-- Box 1: CSV Product Data -->
-<g filter="url(#boxShadow)"><rect x="270" y="150" width="460" height="190" rx="18" fill="url(#gradBlue)"/></g>
-<text x="500" y="188" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">📄 CSV Product Data</text>
-<line x1="294" y1="208" x2="706" y2="208" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="238" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#dbeafe">• Product Records</text>
-<text x="500" y="265" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#dbeafe">• Supplier Information</text>
-<text x="500" y="292" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#dbeafe">• Batch Details</text>
-<text x="500" y="319" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#dbeafe">• Location Updates</text>
+<!-- ── BOX 1: CSV Product Data ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="128" width="450" height="170" rx="16" fill="url(#gradBlue)"/></g>
+<text x="450" y="163" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">📄 CSV Product Data</text>
+<line x1="248" y1="180" x2="652" y2="180" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="207" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#dbeafe">• Product Records</text>
+<text x="450" y="230" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#dbeafe">• Supplier Information</text>
+<text x="450" y="253" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#dbeafe">• Batch Details  •  Location Updates</text>
 
-<line x1="500" y1="340" x2="500" y2="390" stroke="url(#arrBlueIndigo)" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="450" y1="298" x2="450" y2="338" stroke="url(#arrBlueIndigo)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 2: Data Normalization -->
-<g filter="url(#boxShadow)"><rect x="270" y="390" width="460" height="190" rx="18" fill="url(#gradIndigo)"/></g>
-<text x="500" y="428" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">⚙️ Data Normalization</text>
-<line x1="294" y1="448" x2="706" y2="448" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="478" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#e0e7ff">• Synonym Mapping</text>
-<text x="500" y="505" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#e0e7ff">• Field Validation</text>
-<text x="500" y="532" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#e0e7ff">• Missing Data Handling</text>
-<text x="500" y="559" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#e0e7ff">• Status Standardization</text>
+<!-- ── BOX 2: Data Normalization ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="338" width="450" height="170" rx="16" fill="url(#gradIndigo)"/></g>
+<text x="450" y="373" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">⚙️ Data Normalization</text>
+<line x1="248" y1="390" x2="652" y2="390" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="417" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e0e7ff">• Synonym Mapping  •  Field Validation</text>
+<text x="450" y="440" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e0e7ff">• Missing Data Handling</text>
+<text x="450" y="463" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#e0e7ff">• Status Standardization</text>
 
-<line x1="500" y1="580" x2="500" y2="630" stroke="url(#arrIndigoRed)" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="450" y1="508" x2="450" y2="548" stroke="url(#arrIndigoRed)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 3: SHA-256 Verification -->
-<g filter="url(#boxShadow)"><rect x="270" y="630" width="460" height="160" rx="18" fill="url(#gradRed)"/></g>
-<text x="500" y="668" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">🔒 SHA-256 Verification</text>
-<line x1="294" y1="688" x2="706" y2="688" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="718" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#fee2e2">• Record Fingerprinting</text>
-<text x="500" y="745" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#fee2e2">• Integrity Validation</text>
-<text x="500" y="772" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#fee2e2">• Tamper Detection</text>
+<!-- ── BOX 3: SHA-256 Verification ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="548" width="450" height="150" rx="16" fill="url(#gradRed)"/></g>
+<text x="450" y="583" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">🔒 SHA-256 Verification</text>
+<line x1="248" y1="600" x2="652" y2="600" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="627" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#fee2e2">• Record Fingerprinting</text>
+<text x="450" y="650" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#fee2e2">• Integrity Validation  •  Tamper Detection</text>
 
-<line x1="500" y1="790" x2="500" y2="840" stroke="url(#arrRedPurple)" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="450" y1="698" x2="450" y2="738" stroke="url(#arrRedPurple)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 4: SQLite Ledger -->
-<g filter="url(#boxShadow)"><rect x="270" y="840" width="460" height="190" rx="18" fill="url(#gradPurple)"/></g>
-<text x="500" y="878" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">🗄️ SQLite Ledger</text>
-<line x1="294" y1="898" x2="706" y2="898" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="928" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#f3e8ff">• Product Storage</text>
-<text x="500" y="955" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#f3e8ff">• Immutable Records</text>
-<text x="500" y="982" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#f3e8ff">• Hash Persistence</text>
-<text x="500" y="1009" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#f3e8ff">• Audit Trail</text>
+<!-- ── BOX 4: SQLite Ledger ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="738" width="450" height="170" rx="16" fill="url(#gradPurple)"/></g>
+<text x="450" y="773" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">🗄️ SQLite Ledger</text>
+<line x1="248" y1="790" x2="652" y2="790" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="817" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#f3e8ff">• Product Storage  •  Immutable Records</text>
+<text x="450" y="840" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#f3e8ff">• Hash Persistence</text>
+<text x="450" y="863" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#f3e8ff">• Audit Trail</text>
 
-<circle cx="500" cy="1030" r="5" fill="#d8b4fe"/>
-<text x="525" y="1058" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-style="italic" fill="#64748b">parallel paths ▼</text>
-<path d="M500,1030 C500,1055 260,1055 260,1080" fill="none" stroke="url(#arrPurpleTeal)" stroke-width="3" marker-end="url(#arrow)"/>
-<path d="M500,1030 C500,1055 740,1055 740,1080" fill="none" stroke="url(#arrPurpleAmber)" stroke-width="3" marker-end="url(#arrow)"/>
+<!-- Parallel split -->
+<circle cx="450" cy="908" r="4" fill="#d8b4fe"/>
+<text x="472" y="928" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-style="italic" fill="#475569">parallel paths ▼</text>
+<path d="M450,908 C450,930 230,930 230,955" fill="none" stroke="url(#arrPurpleTeal)" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M450,908 C450,930 670,930 670,955" fill="none" stroke="url(#arrPurpleAmber)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 5a: Analytics Dashboard -->
-<g filter="url(#boxShadow)"><rect x="45" y="1080" width="430" height="200" rx="18" fill="url(#gradTeal)"/></g>
-<text x="260" y="1118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">📊 Analytics Dashboard</text>
-<line x1="69" y1="1138" x2="451" y2="1138" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="260" y="1168" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#ccfbf1">• Product Metrics</text>
-<text x="260" y="1195" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#ccfbf1">• Risk Statistics</text>
-<text x="260" y="1222" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#ccfbf1">• Status Distribution</text>
-<text x="260" y="1249" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#ccfbf1">• Manufacturer Insights</text>
+<!-- ── BOX 5a: Analytics Dashboard ── -->
+<g filter="url(#boxShadow)"><rect x="30" y="955" width="390" height="185" rx="16" fill="url(#gradTeal)"/></g>
+<text x="225" y="990" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="17" font-weight="800" fill="#ffffff">📊 Analytics Dashboard</text>
+<line x1="52" y1="1006" x2="398" y2="1006" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="225" y="1032" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#ccfbf1">• Product Metrics</text>
+<text x="225" y="1055" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#ccfbf1">• Risk Statistics</text>
+<text x="225" y="1078" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#ccfbf1">• Status Distribution</text>
+<text x="225" y="1101" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#ccfbf1">• Manufacturer Insights</text>
 
-<!-- Box 5b: Forensic Investigation -->
-<g filter="url(#boxShadow)"><rect x="525" y="1080" width="430" height="200" rx="18" fill="url(#gradAmber)"/></g>
-<text x="740" y="1118" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">🔍 Forensic Investigation</text>
-<line x1="549" y1="1138" x2="931" y2="1138" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="740" y="1168" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fef3c7">• Product Search</text>
-<text x="740" y="1195" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fef3c7">• Chain Analysis</text>
-<text x="740" y="1222" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fef3c7">• Pattern Detection</text>
-<text x="740" y="1249" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fef3c7">• Risk Assessment</text>
+<!-- ── BOX 5b: Forensic Investigation ── -->
+<g filter="url(#boxShadow)"><rect x="480" y="955" width="390" height="185" rx="16" fill="url(#gradAmber)"/></g>
+<text x="675" y="990" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="17" font-weight="800" fill="#ffffff">🔍 Forensic Investigation</text>
+<line x1="502" y1="1006" x2="848" y2="1006" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="675" y="1032" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fef3c7">• Product Search</text>
+<text x="675" y="1055" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fef3c7">• Chain Analysis</text>
+<text x="675" y="1078" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fef3c7">• Pattern Detection</text>
+<text x="675" y="1101" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fef3c7">• Risk Assessment</text>
 
-<line x1="740" y1="1280" x2="740" y2="1330" stroke="url(#arrAmberPink)" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="675" y1="1140" x2="675" y2="1180" stroke="url(#arrAmberPink)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 6: AI Forensic Agent -->
-<g filter="url(#boxShadow)"><rect x="525" y="1330" width="430" height="200" rx="18" fill="url(#gradPink)"/></g>
-<text x="740" y="1368" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#ffffff">🤖 AI Forensic Agent</text>
-<text x="740" y="1392" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#fce7f3">Groq API • Llama 3.3 70B</text>
-<line x1="549" y1="1408" x2="931" y2="1408" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="740" y="1438" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fce7f3">• Root Cause Analysis</text>
-<text x="740" y="1465" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fce7f3">• Investigation Reports</text>
-<text x="740" y="1492" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#fce7f3">• Risk Explanations</text>
+<!-- ── BOX 6: AI Forensic Agent ── -->
+<g filter="url(#boxShadow)"><rect x="480" y="1180" width="390" height="185" rx="16" fill="url(#gradPink)"/></g>
+<text x="675" y="1215" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="17" font-weight="800" fill="#ffffff">🤖 AI Forensic Agent</text>
+<text x="675" y="1236" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="11.5" fill="#fce7f3">Groq API • Llama 3.3 70B</text>
+<line x1="502" y1="1250" x2="848" y2="1250" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="675" y="1276" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fce7f3">• Root Cause Analysis</text>
+<text x="675" y="1299" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fce7f3">• Investigation Reports</text>
+<text x="675" y="1322" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#fce7f3">• Risk Explanations</text>
 
-<text x="245" y="1570" font-family="Segoe UI, Arial, sans-serif" font-size="11" font-style="italic" fill="#64748b">converges ▼</text>
-<path d="M260,1280 C260,1430 500,1430 500,1610" fill="none" stroke="url(#arrTealOrange)" stroke-width="3" marker-end="url(#arrow)"/>
-<path d="M740,1530 C740,1570 500,1570 500,1610" fill="none" stroke="url(#arrPinkOrange)" stroke-width="3" marker-end="url(#arrow)"/>
-<circle cx="500" cy="1610" r="5" fill="#fdba74"/>
+<!-- Converge arrows -->
+<text x="192" y="1415" font-family="'Segoe UI', Arial, sans-serif" font-size="10" font-style="italic" fill="#475569">converges ▼</text>
+<path d="M225,1140 C225,1280 450,1380 450,1420" fill="none" stroke="url(#arrTealOrange)" stroke-width="2.5" marker-end="url(#arrow)"/>
+<path d="M675,1365 C675,1395 450,1395 450,1420" fill="none" stroke="url(#arrPinkOrange)" stroke-width="2.5" marker-end="url(#arrow)"/>
+<circle cx="450" cy="1420" r="4" fill="#fdba74"/>
 
-<!-- Box 7: Audit Reporting -->
-<g filter="url(#boxShadow)"><rect x="270" y="1610" width="460" height="190" rx="18" fill="url(#gradOrange)"/></g>
-<text x="500" y="1648" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">📑 Audit Reporting</text>
-<line x1="294" y1="1668" x2="706" y2="1668" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="1698" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#ffedd5">• PDF Export</text>
-<text x="500" y="1725" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#ffedd5">• Chain of Custody</text>
-<text x="500" y="1752" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#ffedd5">• SHA Verification</text>
-<text x="500" y="1779" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#ffedd5">• Audit Summary</text>
+<!-- ── BOX 7: Audit Reporting ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="1420" width="450" height="170" rx="16" fill="url(#gradOrange)"/></g>
+<text x="450" y="1455" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">📑 Audit Reporting</text>
+<line x1="248" y1="1472" x2="652" y2="1472" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="1499" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#ffedd5">• PDF Export  •  Chain of Custody</text>
+<text x="450" y="1522" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#ffedd5">• SHA Verification</text>
+<text x="450" y="1545" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#ffedd5">• Audit Summary</text>
 
-<line x1="500" y1="1800" x2="500" y2="1850" stroke="url(#arrOrangeCyan)" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="450" y1="1590" x2="450" y2="1630" stroke="url(#arrOrangeCyan)" stroke-width="2.5" marker-end="url(#arrow)"/>
 
-<!-- Box 8: Streamlit Web App -->
-<g filter="url(#boxShadow)"><rect x="270" y="1850" width="460" height="190" rx="18" fill="url(#gradCyan)"/></g>
-<text x="500" y="1888" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">🌐 Streamlit Web App</text>
-<line x1="294" y1="1908" x2="706" y2="1908" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
-<text x="500" y="1938" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#cffafe">• Analytics Dashboard</text>
-<text x="500" y="1965" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#cffafe">• Ledger Explorer</text>
-<text x="500" y="1992" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#cffafe">• AI Investigator</text>
-<text x="500" y="2019" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14.5" fill="#cffafe">• Product Management</text>
+<!-- ── BOX 8: Streamlit Web App ── -->
+<g filter="url(#boxShadow)"><rect x="225" y="1630" width="450" height="170" rx="16" fill="url(#gradCyan)"/></g>
+<text x="450" y="1665" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" font-weight="800" fill="#ffffff">🌐 Streamlit Web App</text>
+<line x1="248" y1="1682" x2="652" y2="1682" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1"/>
+<text x="450" y="1709" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#cffafe">• Analytics Dashboard  •  Ledger Explorer</text>
+<text x="450" y="1732" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#cffafe">• AI Investigator</text>
+<text x="450" y="1755" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13.5" font-weight="600" fill="#cffafe">• Product Management</text>
 
-<line x1="200" y1="2070" x2="800" y2="2070" stroke="#334155" stroke-width="1.5" opacity="0.7"/>
-<text x="500" y="2100" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#94a3b8">Python • Streamlit • SQLite • SHA-256 • Groq API • Llama 3.3 70B</text>
+<!-- Footer -->
+<line x1="160" y1="1828" x2="740" y2="1828" stroke="#22d3ee" stroke-width="1" opacity="0.25"/>
+<text x="450" y="1858" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="600" fill="#94a3b8">Python • Streamlit • SQLite • SHA-256 • Groq API • Llama 3.3 70B</text>
 </svg>
