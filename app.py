@@ -72,7 +72,11 @@ def status_badge_html(status, size="normal"):
     )
  
 def ai_glow_card_html(title, body_text):
-    safe_body = html.escape(body_text).replace("\n", "<br>")
+    import re
+    escaped = html.escape(body_text)
+    # Convert **text** to <strong>text</strong>
+    escaped = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', escaped)
+    safe_body = escaped.replace("\n", "<br>")
     return (
         '<div class="ai-glow-card">'
         f'<div class="ai-glow-card__header">{html.escape(title)}</div>'
@@ -181,6 +185,11 @@ code, pre, kbd, samp, [data-testid="stMetricValue"] {
     font-weight: 800 !important;
     color: #000000 !important;
     border: none !important;
+}
+
+[data-testid="stFormSubmitButton"] button {
+    background: linear-gradient(90deg, #0891B2, #22D3EE) !important;
+    color: #000000 !important;
 }
 
 /* ── Sidebar nav bold labels ─────────────────────────────────────────── */
@@ -1248,13 +1257,13 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                             history = get_historical_summary(pid)
                             status = str(product["status"]).upper()
 
-                            st.markdown(f"### {pid}")
+                            st.markdown(f"<div style='font-size:22px;font-weight:800;margin-bottom:6px;'>{pid}</div>", unsafe_allow_html=True)
                             st.markdown(status_badge_html(status), unsafe_allow_html=True)
 
                             record_hash = product.get("record_hash", "")
                             if record_hash:
                                 with st.container(border=True):
-                                    st.markdown("### Integrity Verification")
+                                    st.markdown("<div style='font-size:18px;font-weight:700;margin-bottom:6px;'>Integrity Verification</div>", unsafe_allow_html=True)
                                     st.markdown("**Algorithm:** SHA-256")
                                     st.markdown(status_badge_html(status, size="small"), unsafe_allow_html=True)
                                     st.code(record_hash, language=None)
@@ -1348,13 +1357,13 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                             report = cached["report"]
                             journey = cached["journey"]
 
-                            st.subheader("AI Forensic Audit Report")
+                            st.markdown("<div style='font-size:24px;font-weight:800;margin-bottom:10px;'>AI Forensic Audit Report</div>", unsafe_allow_html=True)
                             st.markdown(
                                 ai_glow_card_html("Forensic Summary", report),
                                 unsafe_allow_html=True
                             )
 
-                            st.subheader("Chain of Custody")
+                            st.markdown("<div style='font-size:24px;font-weight:800;margin-bottom:10px;'>Chain of Custody</div>", unsafe_allow_html=True)
                             if journey:
                                 j_cols = st.columns(len(journey))
                                 for step, col in zip(journey, j_cols):
@@ -1369,7 +1378,7 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                         st.caption(step["date"])
 
                             st.divider()
-                            st.subheader("Export Audit Report")
+                            st.markdown("<div style='font-size:24px;font-weight:800;margin-bottom:10px;'>Export Audit Report</div>", unsafe_allow_html=True)
                             product_data = load_product_data(actual_pid)
                             with st.spinner("Generating PDF..."):
                                 pdf_bytes = generate_audit_pdf(product_data, journey, report)
@@ -1385,7 +1394,7 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                             )
 
                             st.divider()
-                            st.subheader("Ask the Agent")
+                            st.markdown("<div style='font-size:24px;font-weight:800;margin-bottom:10px;'>Ask the Agent</div>", unsafe_allow_html=True)
                             st.caption(f"Chatting about: **{actual_pid}**")
 
                             for msg in st.session_state.chat_history:
