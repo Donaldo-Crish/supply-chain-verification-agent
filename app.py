@@ -30,7 +30,7 @@ DEFAULTS = {
     "chat_history": [],
     "active_product_id": None,
     "audit_history": {},
-    "current_view": "◈ Analytics Dashboard",
+    "current_view": "⌂ HOME PAGE",
     "sidebar_file_bytes": None,
     "sidebar_file_name": None,
     "last_audited": None,
@@ -96,6 +96,7 @@ def metric_card_html(label, value, delta=None, delta_tone="good", tint=None):
         f'{delta_html}'
         '</div>'
     )
+
 st.markdown("""
 <div class="hero-heading">
     NEXUS TRACE • AI SUPPLY CHAIN INTELLIGENCE PLATFORM
@@ -106,16 +107,18 @@ st.markdown("""
 st.html("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900;1500;1800;2000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900;1500;1800;2000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900;1500;1800;2000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap');
  
 :root {
     --font-heading: 'Poppins', sans-serif;
     --font-body: 'Inter', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
- 
+    --font-serif: 'DM Serif Display', serif;
+
     --bg-base: #0a0e17;
     --bg-elevated: #0f1420;
     --glass-bg: rgba(255, 255, 255, 0.035);
@@ -129,6 +132,17 @@ st.html("""
     --status-verified: #00CC96;
     --status-flagged: #EF553B;
     --status-pending: #FFA15A;
+
+    /* ── Gradient palette ── */
+    --clr-dark-red:    #7B1D1D;
+    --clr-light-red:   #EF4444;
+    --clr-dark-orange: #92400E;
+    --clr-light-orange:#F97316;
+    --clr-dark-yellow: #854D0E;
+    --clr-light-yellow:#FBBF24;
+    --clr-ash:         #9CA3AF;
+    --clr-silver:      #CBD5E1;
+    --clr-offwhite:    #E2E8F0;
 }
  
 /* ── Base surfaces ───────────────────────────────────────────────────── */
@@ -151,7 +165,7 @@ div, span, p, label, button, input, textarea, select,
     letter-spacing: normal !important;
     word-spacing: normal !important;
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h3, h4, h5, h6 {
     font-family: var(--font-heading) !important;
     font-weight: 750 !important;
     letter-spacing: -0.01em !important;
@@ -159,18 +173,17 @@ h1, h2, h3, h4, h5, h6 {
 code, pre, kbd, samp, [data-testid="stMetricValue"] {
     font-family: var(--font-mono) !important;
 }
-    .sidebar-brand-text {
-    display: flex;
-    flex-direction: column;
+
+/* ── Sidebar nav bold labels ─────────────────────────────────────────── */
+[data-testid="stSidebar"] button p,
+[data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] p,
+[data-testid="stSidebar"] [data-testid="stBaseButton-primary"] p {
+    font-weight: 800 !important;
 }
 
-.brand-title {
-    font-family: var(--font-heading);
-    font-size: 1.75rem;
-    font-weight: 900;
-    letter-spacing: -0.5px;
-    line-height: 1;
-    color: #F8FAFC;
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .brand-title {
@@ -190,17 +203,15 @@ code, pre, kbd, samp, [data-testid="stMetricValue"] {
     letter-spacing: 0.3px;
 }
         
-    .sidebar-section-title {
+.sidebar-section-title {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 12px;
     color:#22D3EE;
-
     font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 0.3px;
-
 }
  
 /* Material icons must stay on their own glyph font no matter what */
@@ -329,7 +340,7 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     box-shadow: 0 0 6px var(--accent-cyan);
     animation: ai-pulse 2s ease-in-out infinite;
 }
-        .ledger-dot {
+.ledger-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -379,18 +390,14 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     gap: 8px;
 }
  
-/* ── Sidebar brand card (CHANGE 1) ───────────────────────────────────── */
+/* ── Sidebar brand card ───────────────────────────────────────────────── */
 .sidebar-brand {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 25px 25px;
     border-radius: 18px;
-    background: linear-gradient(
-        135deg,
-        rgba(59,130,246,0.10),
-        rgba(34,211,238,0.05)
-    );
+    background: linear-gradient(135deg, rgba(59,130,246,0.10), rgba(34,211,238,0.05));
     border: 1px solid rgba(59,130,246,0.20);
     margin-bottom: 10px;
     box-shadow: 0 0 18px rgba(34,211,238,0.08);
@@ -415,7 +422,7 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     color: #F1F5F9;
 }
     
-.hero-heading{
+.hero-heading {
     font-size:0.82rem;
     font-weight:700;
     letter-spacing:0.18em;
@@ -428,11 +435,9 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     display: flex;
     align-items: center;
     gap: 10px;
-
     font-size: 2rem;
     font-weight: 800;
     color: #F8FAFC;
-
     margin-bottom: 1rem;
 }
 
@@ -440,8 +445,52 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     font-size: 1.6rem;
     color: #22D3EE;
 }
- 
-/* ── Tinted metric cards (CHANGE 3) ──────────────────────────────────── */
+
+/* ── Gradient text utility ───────────────────────────────────────────── */
+.gradient-text {
+    background: linear-gradient(
+        135deg,
+        var(--clr-dark-red)    0%,
+        var(--clr-light-red)   15%,
+        var(--clr-dark-orange) 30%,
+        var(--clr-light-orange)45%,
+        var(--clr-dark-yellow) 60%,
+        var(--clr-light-yellow)72%,
+        var(--clr-ash)         82%,
+        var(--clr-silver)      90%,
+        var(--clr-offwhite)   100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ── Scope box at bottom of home ─────────────────────────────────────── */
+.scope-box {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-top: 24px;
+}
+.scope-box__title {
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    margin-bottom: 8px;
+}
+.scope-box__body {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    line-height: 1.75;
+    font-weight: 600;
+    color: #cfd8e3
+}
+
+/* ── Tinted metric cards ──────────────────────────────────────────────── */
 .metric-card {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
@@ -452,15 +501,14 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
     flex-direction: column;
     gap: 4px;
 }
-    .sidebar-status{
+.sidebar-status {
     margin-top:10px;
     margin-bottom:8px;
     font-size: 1rem;
     font-weight: 750;
     color: white;
 }
-
-.status-line{
+.status-line {
     display:flex;
     align-items:center;
     gap:6px;
@@ -492,7 +540,7 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
 .metric-card--red   { background: rgba(239, 85, 59, 0.08);  border-color: rgba(239, 85, 59, 0.20); }
 
 /* ── Quick Ingest file uploader glow ─────────────────────────────────── */
-[data-testid="stFileUploader"]{
+[data-testid="stFileUploader"] {
     border:1px solid rgba(34,211,238,0.15);
     border-radius:14px;
     padding:10px;
@@ -511,19 +559,26 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
 }
 [data-testid="stFileUploader"] button { min-width: 6rem !important; }
 [data-testid="stFileUploader"] button [data-testid="stIconMaterial"] { margin-right: 0.25rem !important; }
+
+[data-testid="stDownloadButton"] {
+    margin-top: 18px;
+}
+
+[data-testid="stDownloadButton"] button {
+    border: 1px solid rgba(34, 211, 238, 0.55) !important;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.20) !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+[data-testid="stDownloadButton"] button:hover {
+    border: 1px solid rgba(34, 211, 238, 0.90) !important;
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.40) !important;
+}
 </style>
 """)
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 counts = database.get_product_count()
-total_products = sum(counts.values())
-
-if total_products > 0:
-    ledger_status = "ledger synced"
-else:
-    ledger_status = "ledger awaiting ingestion"
-
-    counts = database.get_product_count()
 total_products = sum(counts.values())
 
 ledger_status = (
@@ -537,11 +592,11 @@ ledger_dot_color = (
     if total_products > 0
     else "#FF5C5C"
 )
+
 with st.sidebar:
     st.html(f"""
 <div class="sidebar-brand">
     <div class="sidebar-brand-icon">◈</div>
-
     <div class="sidebar-brand-text">
         <div class="brand-title">NEXUS TRACE</div>
         <div class="brand-subtitle">AI Supply Chain Intelligence</div>
@@ -553,26 +608,24 @@ with st.sidebar:
         <span class="ai-pulse-dot"></span>
         AI monitor active
     </div>
-
     <div class="status-line">
         <span class="ledger-dot" style="background:{ledger_dot_color};box-shadow:0 0 8px {ledger_dot_color};"></span>
-{ledger_status}
+        {ledger_status}
     </div>
 </div>
 """)
 
-
     st.divider()
- 
+
     st.markdown('''
 <div class="sidebar-section-title">
     <span class="material-symbols-rounded">apps</span>
     Navigation
 </div>
-''',
-unsafe_allow_html=True
-)
+''', unsafe_allow_html=True)
+
     VIEWS = [
+        "⌂ HOME PAGE",
         "◈ Analytics Dashboard",
         "▣ Immutable Ledger",
         "◉ AI Analyzer",
@@ -588,18 +641,16 @@ unsafe_allow_html=True
             on_click=set_view,
             args=(v,)
         )
- 
+
     st.divider()
-    
- 
+
     st.markdown('''
     <div class="sidebar-section-title">
         <span class="material-symbols-rounded">upload_file</span>
         Quick Ingest
     </div>
-    ''',
-    unsafe_allow_html=True
-)
+    ''', unsafe_allow_html=True)
+
     st.file_uploader(
         "Upload CSV",
         type=["csv"],
@@ -609,25 +660,24 @@ unsafe_allow_html=True
     )
 
     with open("demo_products.csv", "rb") as file:
-     st.download_button(
-        label="📥 Download Sample Dataset",
-        data=file,
-        file_name="demo_products.csv",
-        mime="text/csv"
-    )
+        st.download_button(
+            label="📥 Download Sample Dataset",
+            data=file,
+            file_name="demo_products.csv",
+            mime="text/csv"
+        )
     if st.session_state.sidebar_file_name:
         st.caption(f"Loaded: {st.session_state.sidebar_file_name}")
- 
+
     st.divider()
- 
+
     st.markdown('''
     <div class="sidebar-section-title">
         <span class="material-symbols-rounded">list_alt</span>
         Sample Product IDs
     </div>
-    ''',
-    unsafe_allow_html=True
-)
+    ''', unsafe_allow_html=True)
+
     try:
         conn = database.get_connection()
         sample_df = pd.read_sql(
@@ -642,35 +692,218 @@ unsafe_allow_html=True
             st.caption("No products yet.")
     except Exception:
         st.caption("No products yet.")
- 
-    st.divider()
- 
-    st.markdown(
-        '''
-    <div class="sidebar-section-title">
-        <span class="material-symbols-rounded">quiz</span>
-        FAQ
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
-    with st.expander("What does FLAGGED mean?"):
-        st.caption("Anomalies detected — missing verifications, suspicious locations, or irregular batch IDs.")
-    with st.expander("Is this a real blockchain?"):
-        st.caption("Simulated ledger for demo. Logic is scalable to Hyperledger Fabric.")
-    with st.expander("What AI model powers this?"):
-        st.caption("LLaMA 3.3 70B via Groq API.")
-    with st.expander("Can this scale?"):
-        st.caption("Yes — swap SQLite for a real blockchain node, agent logic stays identical.")
- 
+
     st.divider()
     st.caption("Built with LLaMA 3.3 70B + Groq")
- 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# HOME PAGE
+# ══════════════════════════════════════════════════════════════════════════════
+if st.session_state.current_view == "⌂ HOME PAGE":
+
+    # ── NEXUS TRACE title — centered, gradient ────────────────────────────
+    st.markdown("""
+<div class="section-title gradient-text" style="font-size:3.0rem; justify-content:center; font-weight:900;">
+    <span class="material-symbols-rounded" style="-webkit-text-fill-color:#22D3EE;color:#22D3EE;">hub</span>
+    NEXUS TRACE
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("""
+<div style="font-size:40px;font-weight:800;line-height:1.2;margin-bottom:15px;text-align:center;">
+Supply Chain Intelligence & Forensic Analysis Platform
+</div>
+
+<div style="font-size:32px;font-weight:700;margin-bottom:20px;font-family:'DM Serif Display',serif;font-style:italic;text-align:center;">
+Track. Verify. Investigate.
+</div>
+
+<div style="font-size:18px;line-height:1.8;font-weight:700;font-style:italic;">
+Modern supply chains generate thousands of records every day.
+NEXUS TRACE verifies product authenticity, detects suspicious activity,
+identifies counterfeit risks, and assists forensic investigations through
+an immutable audit ledger and AI-powered analysis.
+</div>
+""", unsafe_allow_html=True)
+
+    hero_col1, hero_col2 = st.columns([2, 1])
+
+    with hero_col1:
+        with open("demo_products.csv", "rb") as file:
+            st.download_button(
+                "📥 Download Demo Dataset",
+                data=file,
+                file_name="demo_products.csv",
+                mime="text/csv"
+            )
+       
+
+
+    with hero_col2:
+        st.success("🟢 AI Monitor Online")
+
+    st.divider()
+
+    # ── Deployment Sequence — DM Serif Display ────────────────────────────
+    st.markdown("""
+<div style="font-size:42px;font-weight:700;margin-bottom:20px;font-family:'DM Serif Display',serif;">
+⚡ Deployment Sequence
+</div>
+""", unsafe_allow_html=True)
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        st.markdown("""
+<div style="background:#17304d;padding:15px;border-radius:15px;border:1px solid #264d73;margin-bottom:15px;">
+    <div style="color:#4aa3ff;font-size:16px;font-weight:700;">PHASE 01</div>
+    <div style="font-size:24px;font-weight:800;margin-top:10px;margin-bottom:8px;">📥 DATA ACQUISITION</div>
+    <p>Acquire the demonstration supply-chain manifest.</p>
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div style="background:#17304d;padding:15px;border-radius:15px;border:1px solid #264d73;">
+    <div style="color:#4aa3ff;font-size:16px;font-weight:700;">PHASE 03</div>
+    <div style="font-size:24px;font-weight:800;margin-top:10px;margin-bottom:8px;">📊 RISK ANALYSIS</div>
+    <p>Review anomaly trends, risk metrics and flagged records.</p>
+</div>
+""", unsafe_allow_html=True)
+
+    with c2:
+        st.markdown("""
+<div style="background:#17304d;padding:15px;border-radius:15px;border:1px solid #264d73;margin-bottom:15px;">
+    <div style="color:#4aa3ff;font-size:16px;font-weight:700;">PHASE 02</div>
+    <div style="font-size:24px;font-weight:800;margin-top:10px;margin-bottom:8px;">📤 LEDGER INGESTION</div>
+    <p>Upload the dataset through Registry Operations.</p>
+</div>
+""", unsafe_allow_html=True)
+
+        st.markdown("""
+<div style="background:#17304d;padding:15px;border-radius:15px;border:1px solid #264d73;">
+    <div style="color:#4aa3ff;font-size:16px;font-weight:700;">PHASE 04</div>
+    <div style="font-size:24px;font-weight:800;margin-top:10px;margin-bottom:8px;">🤖 FORENSIC INVESTIGATION</div>
+    <p>Generate forensic reports and anomaly explanations.</p>
+</div>
+""", unsafe_allow_html=True)
+
+    st.divider()
+
+    # ── Operational Modules — DM Serif Display ────────────────────────────
+    st.markdown("""
+<div style="font-size:42px;font-weight:700;margin-top:25px;margin-bottom:20px;font-family:'DM Serif Display',serif;">
+🛠 Operational Modules
+</div>
+""", unsafe_allow_html=True)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        with st.container(border=True):
+            st.markdown("""
+<div style="font-size:22px;font-weight:700;">
+📊 Analytics Dashboard
+</div>
+""", unsafe_allow_html=True)
+            st.write(
+                "Visual intelligence layer for anomaly detection, "
+                "risk monitoring and supply-chain observability."
+            )
+            if st.button("Open Dashboard →", key="home_dashboard"):
+                st.session_state.current_view = "◈ Analytics Dashboard"
+                st.rerun()
+
+        with st.container(border=True):
+            st.markdown("""
+<div style="font-size:22px;font-weight:700;">
+📇 Immutable Ledger
+</div>
+""", unsafe_allow_html=True)
+            st.write(
+                "Inspect records, verify integrity hashes and "
+                "trace historical custody events."
+            )
+            if st.button("Open Ledger →", key="home_ledger"):
+                st.session_state.current_view = "▣ Immutable Ledger"
+                st.rerun()
+
+    with col2:
+        with st.container(border=True):
+            st.markdown("""
+<div style="font-size:22px;font-weight:700;">
+🤖 AI Analyzer
+</div>
+""", unsafe_allow_html=True)
+            st.write(
+                "Generate forensic explanations, risk assessments "
+                "and investigation reports."
+            )
+            if st.button("Launch Analyzer →", key="home_ai"):
+                st.session_state.current_view = "◉ AI Analyzer"
+                st.rerun()
+
+        with st.container(border=True):
+            st.markdown("""
+<div style="font-size:22px;font-weight:700;">
+⚙️ Registry Operations
+</div>
+""", unsafe_allow_html=True)
+            st.write(
+                "Upload, validate and onboard supply-chain datasets."
+            )
+            if st.button("Open Registry →", key="home_registry"):
+                st.session_state.current_view = "⬢ Registry Operations"
+                st.rerun()
+
+    st.divider()
+
+    st.markdown("""
+<div style="
+padding:20px;
+border-left:4px solid #4aa3ff;
+margin-top:10px;
+margin-bottom:20px;
+font-style:italic;
+font-size:18px;
+">
+Trust is the most valuable asset in a supply chain.<br>
+Verification is how you protect it.
+</div>
+
+
+<div style="font-size:24px;font-weight:700;margin-top:12px;">
+NEXUS TRACE
+
+</div>
+""", unsafe_allow_html=True)
+
+    # ── Demonstration Scope box ───────────────────────────────────────────
+    st.markdown("""
+<div class="scope-box">
+    <div class="scope-box__title">SYSTEM OVERVIEW</div>
+    <div class="scope-box__body">
+        NEXUS TRACE demonstrates supply-chain record verification, immutable ledger auditing,
+        anomaly detection, and AI-assisted forensic analysis through a simulated supply-chain environment.<br>
+        The current implementation focuses on data ingestion, investigation workflows, and risk intelligence.
+        Future enhancements may include real-time IoT integration, live asset tracking,
+        blockchain-backed verification, and predictive supply-chain monitoring.
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # VIEW 1 — ANALYTICS DASHBOARD
 # ══════════════════════════════════════════════════════════════════════════════
-if st.session_state.current_view == "◈ Analytics Dashboard":
- 
+elif st.session_state.current_view == "◈ Analytics Dashboard":
+
+    st.markdown("""
+<div class="section-title">
+    <span class="material-symbols-rounded">bar_chart</span>
+    <span style="font-weight:900;">Analytics Dashboard</span>
+</div>
+""", unsafe_allow_html=True)
+
     counts = database.get_product_count()
     total = sum(counts.values())
     flagged = counts.get("FLAGGED", 0)
@@ -679,23 +912,10 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
     df = database.get_all_products_df()
     product_count = len(df)
 
-    ledger_status = (
-        "ledger synced"
-        if product_count > 0
-        else "ledger awaiting ingestion"
-    )
-
-    ledger_dot_color = (
-        "#22D3EE"
-        if product_count > 0
-        else "#FF5C5C"
-    )
-
     node_velocity = df["current_location"].nunique() if not df.empty else 0
     risk_rate = round((flagged / total * 100), 1) if total > 0 else 0
     system_integrity = round((verified / total * 100), 1) if total > 0 else 0
-    
- 
+
     st.markdown(
         f"""
         <div class="hero-banner">
@@ -719,7 +939,7 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
         """,
         unsafe_allow_html=True
     )
- 
+
     col1, col2, col3, col4, col5 = st.columns(5)
     with col1:
         st.markdown(metric_card_html("Total Products", f"{total:,}", tint="cyan"), unsafe_allow_html=True)
@@ -731,9 +951,9 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
         st.markdown(metric_card_html("Risk Rate", f"{risk_rate}%"), unsafe_allow_html=True)
     with col5:
         st.markdown(metric_card_html("Node Velocity", f"{node_velocity} locations"), unsafe_allow_html=True)
- 
+
     st.divider()
- 
+
     if not df.empty:
         st.markdown("""
 <div class="section-title">
@@ -743,7 +963,7 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
 """, unsafe_allow_html=True)
         colA, colB = st.columns(2)
         flagged_df = df[df["status"].str.upper() == "FLAGGED"]
- 
+
         with colA:
             if not flagged_df.empty:
                 loc_flags = flagged_df["current_location"].value_counts().head(10).reset_index()
@@ -760,14 +980,14 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
                     color="count", color_continuous_scale="Reds"
                 )
                 fig_loc.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=10),
-    xaxis_tickangle=-45,
-    showlegend=False
-)
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    margin=dict(t=10),
+                    xaxis_tickangle=-45,
+                    showlegend=False
+                )
                 st.plotly_chart(fig_loc, use_container_width=True)
- 
+
             if not flagged_df.empty:
                 mfg_flags = flagged_df["manufacturer"].value_counts().head(10).reset_index()
                 mfg_flags.columns = ["manufacturer", "count"]
@@ -783,13 +1003,13 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
                     color="count", color_continuous_scale="OrRd"
                 )
                 fig_mfg.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=10),
-    xaxis_tickangle=-45
-)
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    margin=dict(t=10),
+                    xaxis_tickangle=-45
+                )
                 st.plotly_chart(fig_mfg, use_container_width=True)
- 
+
         with colB:
             status_counts = df["status"].value_counts().reset_index()
             status_counts.columns = ["status", "count"]
@@ -811,12 +1031,12 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
                 }
             )
             fig_donut.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=10)
-)
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",
+                margin=dict(t=10)
+            )
             st.plotly_chart(fig_donut, use_container_width=True)
- 
+
             valid_dates = df[df["manufacture_date"] != "UNKNOWN"]
             if not valid_dates.empty:
                 date_counts = valid_dates.groupby("manufacture_date").size().reset_index(name="count")
@@ -834,14 +1054,14 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
                     color_discrete_sequence=["#636EFA"]
                 )
                 fig_time.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    margin=dict(t=10)
-)
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    margin=dict(t=10)
+                )
                 st.plotly_chart(fig_time, use_container_width=True)
             else:
                 st.info("No valid date data for timeline.")
- 
+
         st.subheader("Risk Heatmap: Manufacturer vs Location")
         if not flagged_df.empty:
             valid_heatmap = flagged_df[
@@ -861,7 +1081,7 @@ if st.session_state.current_view == "◈ Analytics Dashboard":
                 st.info("Not enough location data for heatmap.")
     else:
         st.warning("Database is empty. Add products to see analytics.")
- 
+
 # ══════════════════════════════════════════════════════════════════════════════
 # VIEW 2 — IMMUTABLE LEDGER
 # ══════════════════════════════════════════════════════════════════════════════
@@ -869,14 +1089,12 @@ elif st.session_state.current_view == "▣ Immutable Ledger":
     st.markdown("""
 <div class="section-title">
     <span class="material-symbols-rounded">receipt_long</span>
-    Immutable Ledger
+    <span style="font-weight:900;">Immutable Ledger</span>
 </div>
-                
-""", unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
+
     df = database.get_all_products_df()
-    
- 
+
     if not df.empty:
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -897,15 +1115,15 @@ elif st.session_state.current_view == "▣ Immutable Ledger":
                 options=sorted(df["current_location"].unique().tolist()),
                 default=[]
             )
- 
+
         filtered_df = df[df["status"].isin(status_filter)]
         if mfg_filter:
             filtered_df = filtered_df[filtered_df["manufacturer"].isin(mfg_filter)]
         if loc_filter:
             filtered_df = filtered_df[filtered_df["current_location"].isin(loc_filter)]
- 
+
         st.caption(f"Showing {len(filtered_df):,} of {len(df):,} records")
- 
+
         def color_status(val):
             val = str(val).upper()
             if val == "VERIFIED":
@@ -915,13 +1133,13 @@ elif st.session_state.current_view == "▣ Immutable Ledger":
             if val == "PENDING":
                 return "color: #FFA15A; font-weight: bold"
             return ""
- 
+
         st.dataframe(
             filtered_df.style.map(color_status, subset=["status"]),
             use_container_width=True,
             height=450
         )
- 
+
         st.divider()
         st.subheader("Manufacturer Risk Intelligence")
         with st.expander("Run Pattern Detection"):
@@ -939,19 +1157,20 @@ elif st.session_state.current_view == "▣ Immutable Ledger":
                         st.warning(risk_summary)
     else:
         st.warning("Ledger is empty.")
- 
+
 # ══════════════════════════════════════════════════════════════════════════════
-# VIEW 3 — AI FORENSIC INVESTIGATOR
+# VIEW 3 — AI ANALYZER
 # ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.current_view == "◉ AI Analyzer":
     st.markdown("""
 <div class="section-title">
     <span class="material-symbols-rounded">smart_toy</span>
-    AI Analyzer
+    <span style="font-weight:900;">AI Analyzer</span>
 </div>
 """, unsafe_allow_html=True)
+
     df = database.get_all_products_df()
- 
+
     if df.empty:
         st.warning("Ledger is empty. Add products first.")
     else:
@@ -960,14 +1179,14 @@ elif st.session_state.current_view == "◉ AI Analyzer":
             key="investigator_search",
             placeholder="e.g. PRD-9272, 9272, Component-9272"
         )
- 
+
         run_audit = st.button(
             "Run Forensic Audit",
             type="primary",
             use_container_width=True,
             key="run_audit"
         )
- 
+
         if search_input or st.session_state.matching_products:
             if search_input:
                 search_terms = [
@@ -975,7 +1194,7 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                     for term in search_input.split(",")
                     if term.strip()
                 ]
- 
+
                 matching_products = []
                 df_copy = df.copy()
                 df_copy["_search_key"] = (
@@ -985,7 +1204,7 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                     .str.replace("-", "", regex=False)
                     .str.replace(" ", "", regex=False)
                 )
- 
+
                 for term in search_terms:
                     result = df_copy[
                         df_copy["_search_key"].str.contains(term, na=False, regex=False)
@@ -994,25 +1213,25 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                         pid = row["product_id"]
                         if pid not in [p["product_id"] for p in matching_products]:
                             matching_products.append(row.to_dict())
- 
+
                 st.session_state.matching_products = matching_products
- 
+
             matching_products = st.session_state.matching_products
- 
+
             if matching_products:
                 st.subheader("Matching Products")
                 cols = st.columns(3)
- 
+
                 for idx, product in enumerate(matching_products):
                     with cols[idx % 3]:
                         with st.container(border=True):
                             pid = product["product_id"]
                             history = get_historical_summary(pid)
                             status = str(product["status"]).upper()
- 
+
                             st.markdown(f"### {pid}")
                             st.markdown(status_badge_html(status), unsafe_allow_html=True)
- 
+
                             record_hash = product.get("record_hash", "")
                             if record_hash:
                                 with st.container(border=True):
@@ -1021,23 +1240,22 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                     st.markdown(status_badge_html(status, size="small"), unsafe_allow_html=True)
                                     st.code(record_hash, language=None)
                                     st.caption("Fingerprint successfully stored in ledger")
- 
+
                             st.caption(f"Manufacturer: {product['manufacturer']}")
                             st.caption(f"Location: {product['current_location']}")
                             st.metric("Events", history["total_events"])
- 
+
                             if st.button("Open Investigation", key=f"open_{pid}"):
                                 st.session_state.selected_product = pid
- 
+
                 if st.session_state.selected_product is not None:
                     actual_pid = st.session_state.selected_product
                     product_info = load_product_data(actual_pid)
                     selected_row = df[df["product_id"] == actual_pid]
- 
+
                     if not selected_row.empty:
-                        match = selected_row
                         status = str(selected_row.iloc[0]["status"]).upper()
- 
+
                         if product_info:
                             fields = [
                                 (k, v) for k, v in product_info.items()
@@ -1049,39 +1267,39 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                     k.replace("_", " ").title(),
                                     str(v)[:30] if v else "—"
                                 )
- 
+
                         historical = get_historical_summary(actual_pid)
                         if historical:
                             st.subheader("Historical Ledger Activity")
- 
+
                             if historical["total_events"] > 15:
                                 st.error("HIGH HISTORY COMPLEXITY")
                             elif historical["total_events"] > 8:
                                 st.warning("MEDIUM HISTORY COMPLEXITY")
                             else:
                                 st.success("LOW HISTORY COMPLEXITY")
- 
+
                             col_a, col_b, col_c = st.columns(3)
                             col_a.metric("Total Events", historical["total_events"])
                             col_b.metric("Manufacturers", len(historical["manufacturers"]))
                             col_c.metric("Locations", len(historical["locations"]))
- 
+
                             st.markdown(
                                 f"**Manufacturers Seen:** {', '.join(historical['manufacturers'])}\n\n"
                                 f"**Locations Visited:** {', '.join(historical['locations'])}"
                             )
- 
+
                             status_text = " | ".join(
                                 f"{k}: {v}" for k, v in historical["status_counts"].items()
                             )
                             st.info(f"Status Breakdown → {status_text}")
- 
+
                         st.markdown(
                             f'<div style="margin:6px 0 14px 0;">{status_badge_html(status)} '
                             f'<span style="color:rgba(255,255,255,0.6);font-size:0.85rem;">— {actual_pid}</span></div>',
                             unsafe_allow_html=True
                         )
- 
+
                         if run_audit:
                             if actual_pid not in st.session_state.audit_history:
                                 with st.spinner("Running forensic analysis..."):
@@ -1095,18 +1313,18 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                             if st.session_state.last_audited != actual_pid:
                                 st.session_state.chat_history = []
                                 st.session_state.last_audited = actual_pid
- 
+
                         if actual_pid in st.session_state.audit_history:
                             cached = st.session_state.audit_history[actual_pid]
                             report = cached["report"]
                             journey = cached["journey"]
- 
+
                             st.subheader("AI Forensic Audit Report")
                             st.markdown(
                                 ai_glow_card_html("Forensic Summary", report),
                                 unsafe_allow_html=True
                             )
- 
+
                             st.subheader("Chain of Custody")
                             if journey:
                                 j_cols = st.columns(len(journey))
@@ -1120,13 +1338,13 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                         )
                                         st.caption(step["location"])
                                         st.caption(step["date"])
- 
+
                             st.divider()
                             st.subheader("Export Audit Report")
                             product_data = load_product_data(actual_pid)
                             with st.spinner("Generating PDF..."):
                                 pdf_bytes = generate_audit_pdf(product_data, journey, report)
- 
+
                             filename = f"audit_{actual_pid}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
                             st.download_button(
                                 label=f"Download {actual_pid} Audit Report (PDF)",
@@ -1136,15 +1354,15 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                 type="primary",
                                 key=f"dl_{actual_pid}"
                             )
- 
+
                             st.divider()
                             st.subheader("Ask the Agent")
                             st.caption(f"Chatting about: **{actual_pid}**")
- 
+
                             for msg in st.session_state.chat_history:
                                 with st.chat_message(msg["role"]):
                                     st.write(msg["content"])
- 
+
                             user_input = st.chat_input(
                                 placeholder=f"Ask about {actual_pid} — e.g. 'Why is it flagged?' or 'What should I do next?'"
                             )
@@ -1160,7 +1378,7 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                                     st.session_state.chat_history = updated_history
                                 with st.chat_message("assistant"):
                                     st.write(reply)
- 
+
                             if st.session_state.chat_history:
                                 if st.button("Clear Chat", type="secondary", key=f"clear_chat_{actual_pid}"):
                                     st.session_state.chat_history = []
@@ -1171,19 +1389,20 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                         st.error(f"Product '{actual_pid}' not found in ledger.")
             else:
                 st.error(f"No product matching '{search_input}' found in ledger.")
- 
+
 # ══════════════════════════════════════════════════════════════════════════════
-# VIEW 4 — REGISTER PRODUCT
+# VIEW 4 — REGISTRY OPERATIONS
 # ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.current_view == "⬢ Registry Operations":
     st.markdown("""
 <div class="section-title">
     <span class="material-symbols-rounded">inventory</span>
-    Registry Operations
+    <span style="font-weight:900;">Registry Operations</span>
 </div>
 """, unsafe_allow_html=True)
+
     st.subheader("Add New Product")
- 
+
     with st.form("add_product_form", clear_on_submit=True):
         col1, col2 = st.columns(2)
         with col1:
@@ -1195,9 +1414,9 @@ elif st.session_state.current_view == "⬢ Registry Operations":
             mfg_date = st.date_input("Manufacture Date")
             loc = st.text_input("Current Location")
             status = st.selectbox("Status", ["VERIFIED", "FLAGGED", "PENDING"])
- 
+
         save_clicked = st.form_submit_button("Save to Ledger", type="primary")
- 
+
     if save_clicked:
         if not p_id or not name:
             st.error("Product ID and Name are required.")
@@ -1217,12 +1436,12 @@ elif st.session_state.current_view == "⬢ Registry Operations":
                 st.rerun()
             else:
                 st.error(message)
- 
+
     st.divider()
- 
+
     st.subheader("Bulk Ingestion (ERP Sync)")
     st.write("Upload any CSV — the semantic mapper normalizes column names automatically.")
- 
+
     uploaded_file = None
     if st.session_state.sidebar_file_bytes is not None:
         uploaded_file = BytesIO(st.session_state.sidebar_file_bytes)
@@ -1230,7 +1449,7 @@ elif st.session_state.current_view == "⬢ Registry Operations":
         st.success("File loaded from Quick Ingest sidebar.")
     else:
         uploaded_file = st.file_uploader("Upload CSV Manifest", type=["csv"], key="main_uploader")
- 
+
     if uploaded_file is not None:
         try:
             uploaded_file.seek(0)
@@ -1240,10 +1459,10 @@ elif st.session_state.current_view == "⬢ Registry Operations":
             st.session_state.sidebar_file_bytes = None
             st.session_state.sidebar_file_name = None
             st.stop()
- 
+
         st.write(f"**{len(bulk_df):,} rows detected. Review mappings:**")
         st.dataframe(bulk_df.head(3), use_container_width=True)
- 
+
         st.write("### Column Mapping Suggestions")
         user_confirmed_map = {}
         for col in bulk_df.columns:
@@ -1259,7 +1478,7 @@ elif st.session_state.current_view == "⬢ Registry Operations":
             )
             if selection != "Ignore":
                 user_confirmed_map[col] = selection
- 
+
         if st.button("Confirm mappings and Upload", type="primary", key="commit_ingest"):
             with st.spinner(f"Ingesting {len(bulk_df):,} products..."):
                 inserted, skipped = database.bulk_insert_products(
@@ -1269,15 +1488,15 @@ elif st.session_state.current_view == "⬢ Registry Operations":
                 st.cache_data.clear()
                 st.session_state.sidebar_file_bytes = None
                 st.session_state.sidebar_file_name = None
- 
+
             if skipped > 0:
                 st.warning(f"{inserted:,} products ingested, {skipped:,} skipped (duplicate product_id).")
             else:
                 st.success(f"{inserted:,} products ingested.")
             st.rerun()
- 
+
     st.divider()
- 
+
     st.subheader("System Administration")
     with st.expander("Danger Zone — Admin Only"):
         st.warning("Factory reset will permanently destroy the ledger. Cannot be reversed.")
