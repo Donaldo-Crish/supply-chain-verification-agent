@@ -992,10 +992,11 @@ elif st.session_state.current_view == "◈ Analytics Dashboard":
 </div>
 """, unsafe_allow_html=True)
                 fig_loc = px.bar(
-                    loc_flags, x="location", y="count",
-                    title="",
-                    color="count", color_continuous_scale="Reds"
-                )
+    loc_flags, x="location", y="count",
+    title="",
+    color="count",
+    color_continuous_scale="YlOrRd"
+)
                 fig_loc.update_layout(
                     plot_bgcolor="rgba(0,0,0,0)",
                     paper_bgcolor="rgba(0,0,0,0)",
@@ -1017,7 +1018,8 @@ elif st.session_state.current_view == "◈ Analytics Dashboard":
                 fig_mfg = px.bar(
                     mfg_flags, x="manufacturer", y="count",
                     title="",
-                    color="count", color_continuous_scale="OrRd"
+                    color="count", color_continuous_scale="YlOrRd"
+
                 )
                 fig_mfg.update_layout(
                     plot_bgcolor="rgba(0,0,0,0)",
