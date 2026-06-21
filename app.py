@@ -173,6 +173,15 @@ h1, h3, h4, h5, h6 {
 code, pre, kbd, samp, [data-testid="stMetricValue"] {
     font-family: var(--font-mono) !important;
 }
+        
+        /* ── Run Forensic Audit button override ──────────────────────────────── */
+[data-testid="stMainBlockContainer"] [data-testid="stBaseButton-primary"] {
+    background: linear-gradient(90deg, #0891B2, #22D3EE, #D4AF37) !important;
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.30) !important;
+    font-weight: 800 !important;
+    color: #000000 !important;
+    border: none !important;
+}
 
 /* ── Sidebar nav bold labels ─────────────────────────────────────────── */
 [data-testid="stSidebar"] button p,
@@ -1252,6 +1261,16 @@ elif st.session_state.current_view == "◉ AI Analyzer":
                             st.caption(f"Manufacturer: {product['manufacturer']}")
                             st.caption(f"Location: {product['current_location']}")
                             st.metric("Events", history["total_events"])
+                            flagged_events = history["status_counts"].get("FLAGGED", 0)
+                            total_events = history["total_events"]
+                            raw_score = round((flagged_events / total_events * 100), 1) if total_events > 0 else 0
+                            if status == "VERIFIED":
+                                risk_score = round(raw_score * 0.25, 1)
+                            elif status == "PENDING":
+                                risk_score = round(raw_score * 0.60, 1)
+                            else:
+                                risk_score = raw_score
+                            st.metric("Risk Score", f"{risk_score}%")
 
                             if st.button("Open Investigation", key=f"open_{pid}"):
                                 st.session_state.selected_product = pid
