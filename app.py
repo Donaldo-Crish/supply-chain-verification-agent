@@ -450,15 +450,15 @@ button[kind="primary"], [data-testid="stBaseButton-primary"] {
 .gradient-text {
     background: linear-gradient(
         135deg,
-        var(--clr-dark-red)    0%,
-        var(--clr-light-red)   15%,
-        var(--clr-dark-orange) 30%,
-        var(--clr-light-orange)45%,
-        var(--clr-dark-yellow) 60%,
-        var(--clr-light-yellow)72%,
-        var(--clr-ash)         82%,
-        var(--clr-silver)      90%,
-        var(--clr-offwhite)   100%
+        --clr-dark-red:    #0891B2;
+--clr-light-red:   #22D3EE 0%
+--clr-dark-orange: #D4AF37 20%
+--clr-light-orange:#FBBF24 45%
+--clr-dark-yellow: #D4AF37 60%
+--clr-light-yellow:#22D3EE 72%
+--clr-ash:         #0891B2 82%
+--clr-silver:      #CBD5E1 90%
+--clr-offwhite:    #E2E8F0 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -703,9 +703,15 @@ if st.session_state.current_view == "⌂ HOME PAGE":
 
     # ── NEXUS TRACE title — centered, gradient ────────────────────────────
     st.markdown("""
-<div class="section-title gradient-text" style="font-size:3.0rem; justify-content:center; font-weight:900;">
+<div class="section-title" style="font-size:3.0rem; justify-content:center; font-weight:900;">
     <span class="material-symbols-rounded" style="-webkit-text-fill-color:#22D3EE;color:#22D3EE;">hub</span>
-    NEXUS TRACE
+    <a href="https://nexus-trace-ai.streamlit.app/" target="_blank" style="
+        text-decoration:none;
+        -webkit-text-fill-color:transparent;
+        background: linear-gradient(135deg, #22D3EE 0%, #0891B2 20%, #D4AF37 45%, #FBBF24 60%, #D4AF37 75%, #0891B2 88%, #22D3EE 100%);
+        -webkit-background-clip:text;
+        background-clip:text;
+    ">NEXUS TRACE</a>
 </div>
 """, unsafe_allow_html=True)
 
