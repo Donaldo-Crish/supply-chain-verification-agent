@@ -19,8 +19,8 @@ from pdf_export import generate_audit_pdf
 database.init_db()
  
 st.set_page_config(
-    page_title="◈ NEXUS TRACE AI Supply Chain Intelligence",
-    page_icon="🔗",
+    page_title="NEXUS TRACE AI Supply Chain Intelligence",
+    page_icon="❉",
     layout="wide",
     initial_sidebar_state="expanded"
 )
