@@ -1,5 +1,6 @@
-[# **🔗NEXUS TRACE** | ***Supply Chain Forensics Platform***](https://nexus-trace-ai.streamlit.app/)
 
+# [NEXUS TRACE](https://your-streamlit-app-url.streamlit.app) | Supply Chain Forensics Platform
+[![Live Demo](https://img.shields.io/badge/LIVE-DEMO-00c853?style=for-the-badge)](https://your-streamlit-app-url.streamlit.app)
 
 > ***An AI-powered supply chain auditing and verification platform that cryptographically fingerprints supply-chain records, analyzes historical ledger data, and generates forensic audit reports.***
 
